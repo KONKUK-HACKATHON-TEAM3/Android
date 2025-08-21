@@ -9,22 +9,22 @@ import com.konkuk.hackathon_team3.ui.theme.KONKUKHACKATHONTEAM3Theme
 
 @Composable
 fun MinseoRoute(
-    navigateToMinseok: () -> Unit,
+    navigateToRecordWrite: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     MinseoScreen(
-        navigateToMinseok = navigateToMinseok,
+        navigateToRecordWrite = navigateToRecordWrite,
         modifier = modifier
     )
 }
 
 @Composable
 fun MinseoScreen(
-    navigateToMinseok: () -> Unit,
+    navigateToRecordWrite: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Button(
-        onClick = navigateToMinseok
+        onClick = navigateToRecordWrite
     ) {
         Text("to Minseok")
     }
@@ -35,7 +35,7 @@ fun MinseoScreen(
 private fun PreviewMinseoScreen() {
     KONKUKHACKATHONTEAM3Theme {
         MinseoScreen(
-            navigateToMinseok = {}
+            navigateToRecordWrite = {}
         )
     }
 }

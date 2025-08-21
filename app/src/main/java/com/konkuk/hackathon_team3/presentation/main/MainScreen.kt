@@ -16,12 +16,12 @@ import com.konkuk.hackathon_team3.ui.theme.KONKUKHACKATHONTEAM3Theme
 @Composable
 fun MainRoute(
     navigateToMinseo: () -> Unit,
-    navigateToMinseok: () -> Unit,
+    navigateToRecordWrite: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     MainScreen(
         navigateToMinseo = navigateToMinseo,
-        navigateToMinseok = navigateToMinseok,
+        navigateToRecordWrite = navigateToRecordWrite,
         modifier = modifier
     )
 }
@@ -29,7 +29,7 @@ fun MainRoute(
 @Composable
 fun MainScreen(
     navigateToMinseo: () -> Unit,
-    navigateToMinseok: () -> Unit,
+    navigateToRecordWrite: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -45,7 +45,7 @@ fun MainScreen(
         }
         Spacer(modifier = Modifier.height(20.dp))
         Button(
-            onClick = navigateToMinseok,
+            onClick = navigateToRecordWrite,
             modifier = modifier
         ) {
             Text("to Minseok")
@@ -59,7 +59,7 @@ private fun PreviewMainScreen() {
     KONKUKHACKATHONTEAM3Theme {
         MainScreen(
             navigateToMinseo = {},
-            navigateToMinseok = {}
+            navigateToRecordWrite = {}
         )
     }
 }
