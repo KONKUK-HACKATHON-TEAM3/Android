@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.KONKUKHACKATHONTEAM3" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Base.Theme.KONKUKHACKATHONTEAM3" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="Theme.KONKUKHACKATHONTEAM3" parent="Base.Theme.KONKUKHACKATHONTEAM3">
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
 </resources>
