@@ -20,8 +20,16 @@ fun MainNavHost(
     ) {
         NavHost(
             navController = navController,
-            startDestination = "minseo"
+            startDestination = "main"
         ) {
+
+            composable(route = "main") {
+                MainRoute(
+                    navigateToMinseo = { navController.navigateToMinseo() },
+                    navigateToMinseok = { navController.navigateToMinseok() }
+                )
+            }
+
             composable(route = "minseo") {
                 MinseoRoute(
                     navigateToMinseok = { navController.navigateToMinseok() }

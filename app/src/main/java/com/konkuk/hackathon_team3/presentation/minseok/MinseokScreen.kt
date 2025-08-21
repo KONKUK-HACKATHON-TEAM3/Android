@@ -1,8 +1,12 @@
 package com.konkuk.hackathon_team3.presentation.minseok
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.konkuk.hackathon_team3.ui.theme.KONKUKHACKATHONTEAM3Theme
@@ -14,6 +18,7 @@ fun MinseokRoute(
 ) {
     MinseokScreen(
         navigateToMinseo = navigateToMinseo,
+        recordButtonClicked = {},
         modifier = modifier
     )
 }
@@ -21,13 +26,19 @@ fun MinseokRoute(
 @Composable
 fun MinseokScreen(
     navigateToMinseo: () -> Unit,
+    recordButtonClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Button(
-        onClick = navigateToMinseo,
-        modifier = modifier
-    ) {
-        Text("to Minseo")
+    val recordButtonText by remember { mutableStateOf("녹음버튼") }
+    val recordButtonEnabled by remember { mutableStateOf(true) }
+
+    Column(modifier = modifier) {
+        Button(
+            onClick = navigateToMinseo,
+        ) {
+            Text("to Minseo")
+        }
+        Text(text = "녹음버튼")
     }
 }
 
@@ -36,7 +47,8 @@ fun MinseokScreen(
 private fun PreviewMinseokScreen() {
     KONKUKHACKATHONTEAM3Theme {
         MinseokScreen(
-            navigateToMinseo = {}
+            navigateToMinseo = {},
+            recordButtonClicked = {},
         )
     }
 }
