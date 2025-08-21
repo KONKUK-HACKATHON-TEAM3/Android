@@ -9,9 +9,9 @@ fun NavController.navigateToMinseo() {
     }
 }
 
-fun NavController.navigateToMinseok() {
-    navigate("minseok") {
+fun NavController.navigateToRecordWrite() {
+    navigate("recordWrite") {
         launchSingleTop = true
-        popUpTo("minseok") { inclusive = true }
+        popUpTo("recordWrite") { inclusive = true }
     }
 }

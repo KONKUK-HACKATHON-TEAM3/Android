@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.konkuk.hackathon_team3.presentation.minseo.MinseoRoute
 import com.konkuk.hackathon_team3.presentation.minseok.MinseokRoute
+import com.konkuk.hackathon_team3.presentation.minseok.RecordWriteRoute
 
 @Composable
 fun MainNavHost(
@@ -32,12 +33,12 @@ fun MainNavHost(
 
             composable(route = "minseo") {
                 MinseoRoute(
-                    navigateToMinseok = { navController.navigateToMinseok() }
+                    navigateToRecordWrite = { navController.navigateToRecordWrite() }
                 )
             }
 
-            composable(route = "minseok") {
-                MinseokRoute(
+            composable(route = "recordWrite") {
+                RecordWriteRoute(
                     navigateToMinseo = { navController.navigateToMinseo() }
                 )
             }

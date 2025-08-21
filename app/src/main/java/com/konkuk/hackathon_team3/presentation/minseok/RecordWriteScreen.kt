@@ -12,11 +12,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.konkuk.hackathon_team3.ui.theme.KONKUKHACKATHONTEAM3Theme
 
 @Composable
-fun MinseokRoute(
+fun RecordWriteRoute(
     navigateToMinseo: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    MinseokScreen(
+    RecordWriteScreen(
         navigateToMinseo = navigateToMinseo,
         recordButtonClicked = {},
         modifier = modifier
@@ -24,7 +24,7 @@ fun MinseokRoute(
 }
 
 @Composable
-fun MinseokScreen(
+fun RecordWriteScreen(
     navigateToMinseo: () -> Unit,
     recordButtonClicked: () -> Unit,
     modifier: Modifier = Modifier
@@ -46,7 +46,7 @@ fun MinseokScreen(
 @Composable
 private fun PreviewMinseokScreen() {
     KONKUKHACKATHONTEAM3Theme {
-        MinseokScreen(
+        RecordWriteScreen(
             navigateToMinseo = {},
             recordButtonClicked = {},
         )
