@@ -15,7 +15,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-data class RecordWriteUiState(
+data class GasWritingUiState(
     val pageState: Int = 1,
     val imageRecord: Uri? = null,
     val audioRecord: File? = null,
@@ -29,11 +29,11 @@ data class RecordWriteUiState(
 )
 
 
-class RecordWriteViewModel : ViewModel() {
+class GasWritingViewModel : ViewModel() {
     private val exampleService by lazy { ServicePool.exampleService }
 
-    private val _uiState = MutableStateFlow(RecordWriteUiState())
-    val uiState: StateFlow<RecordWriteUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(GasWritingUiState())
+    val uiState: StateFlow<GasWritingUiState> = _uiState.asStateFlow()
 
     private var mediaRecorder: MediaRecorder? = null
     private var outputFile: File? = null
@@ -115,7 +115,7 @@ class RecordWriteViewModel : ViewModel() {
                 recordingError = null
             )
 
-            Log.d("RecordWriteViewModel", "audioFile")
+            Log.d("GasWritingViewModel", "audioFile")
         } catch (e: Exception) {
             _uiState.value = _uiState.value.copy(
                 isRecording = false,

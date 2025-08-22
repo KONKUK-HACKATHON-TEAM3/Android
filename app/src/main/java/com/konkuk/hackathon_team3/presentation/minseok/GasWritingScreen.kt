@@ -15,8 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -28,10 +26,10 @@ import com.konkuk.hackathon_team3.presentation.util.noRippleClickable
 import com.konkuk.hackathon_team3.ui.theme.KONKUKHACKATHONTEAM3Theme
 
 @Composable
-fun RecordWriteRoute(
-    navigateToMinseo: () -> Unit,
+fun GasWritingRoute(
+    navigateToRanking: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: RecordWriteViewModel = viewModel()
+    viewModel: GasWritingViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
@@ -57,9 +55,9 @@ fun RecordWriteRoute(
         }
     }
 
-    RecordWriteScreen(
+    GasWritingScreen(
         uiState = uiState,
-        navigateToMinseo = navigateToMinseo,
+        navigateToRanking = navigateToRanking,
         recordButtonClicked = { viewModel.recordButtonClicked(context = context) },
         playButtonClicked = { viewModel.playRecording() },
         modifier = modifier
@@ -67,9 +65,9 @@ fun RecordWriteRoute(
 }
 
 @Composable
-fun RecordWriteScreen(
-    uiState: RecordWriteUiState,
-    navigateToMinseo: () -> Unit,
+fun GasWritingScreen(
+    uiState: GasWritingUiState,
+    navigateToRanking: () -> Unit,
     recordButtonClicked: () -> Unit,
     playButtonClicked: () -> Unit,
     modifier: Modifier = Modifier
@@ -80,9 +78,9 @@ fun RecordWriteScreen(
         verticalArrangement = Arrangement.Center
     ) {
         Button(
-            onClick = navigateToMinseo,
+            onClick = navigateToRanking,
         ) {
-            Text("to Minseo")
+            Text("to Ranking")
         }
         Spacer(modifier = Modifier.height(20.dp))
         Text(
@@ -103,12 +101,12 @@ fun RecordWriteScreen(
 
 @Preview(showBackground = true)
 @Composable
-private fun PreviewMinseokScreen() {
+private fun PreviewGasWritingScreen() {
     KONKUKHACKATHONTEAM3Theme {
-        RecordWriteScreen(
-            navigateToMinseo = {},
+        GasWritingScreen(
+            navigateToRanking = {},
             recordButtonClicked = {},
-            uiState = RecordWriteUiState(),
+            uiState = GasWritingUiState(),
             playButtonClicked = {},
         )
     }

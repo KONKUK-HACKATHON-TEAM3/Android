@@ -7,8 +7,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.konkuk.hackathon_team3.presentation.minseo.MinseoRoute
-import com.konkuk.hackathon_team3.presentation.minseok.RecordWriteRoute
+import com.konkuk.hackathon_team3.presentation.Ranking.RankingRoute
+import com.konkuk.hackathon_team3.presentation.Rankingk.GasWritingRoute
 
 @Composable
 fun MainNavHost(
@@ -25,20 +25,20 @@ fun MainNavHost(
 
             composable(route = "main") {
                 MainRoute(
-                    navigateToMinseo = { navController.navigateToMinseo() },
-                    navigateToRecordWrite = { navController.navigateToRecordWrite() }
+                    navigateToRanking = { navController.navigateToRanking() },
+                    navigateToGasWriting = { navController.navigateToGasWriting() }
                 )
             }
 
-            composable(route = "minseo") {
-                MinseoRoute(
-                    navigateToRecordWrite = { navController.navigateToRecordWrite() }
+            composable(route = "Ranking") {
+                RankingRoute(
+                    navigateToRecordWrite = { navController.navigateToGasWriting() }
                 )
             }
 
-            composable(route = "recordWrite") {
-                RecordWriteRoute(
-                    navigateToMinseo = { navController.navigateToMinseo() }
+            composable(route = "gasWriting") {
+                GasWritingRoute(
+                    navigateToRanking = { navController.navigateToRanking() }
                 )
             }
         }

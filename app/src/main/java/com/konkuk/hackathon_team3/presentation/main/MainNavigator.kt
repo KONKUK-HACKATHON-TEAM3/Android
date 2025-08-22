@@ -2,16 +2,16 @@ package com.konkuk.hackathon_team3.presentation.main
 
 import androidx.navigation.NavController
 
-fun NavController.navigateToMinseo() {
-    navigate("minseo") {
+fun NavController.navigateToRanking() {
+    navigate("Ranking") {
         launchSingleTop = true
-        popUpTo("minseo") { inclusive = true }
+        popUpTo("Ranking") { inclusive = true }
     }
 }
 
-fun NavController.navigateToRecordWrite() {
-    navigate("recordWrite") {
+fun NavController.navigateToGasWriting() {
+    navigate("gasWriting") {
         launchSingleTop = true
-        popUpTo("recordWrite") { inclusive = true }
+        popUpTo("gasWriting") { inclusive = true }
     }
 }
