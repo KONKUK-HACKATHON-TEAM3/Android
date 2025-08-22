@@ -15,21 +15,21 @@ import com.konkuk.hackathon_team3.ui.theme.KONKUKHACKATHONTEAM3Theme
 
 @Composable
 fun MainRoute(
-    navigateToMinseo: () -> Unit,
-    navigateToMinseok: () -> Unit,
+    navigateToRanking: () -> Unit,
+    navigateToGasWriting: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     MainScreen(
-        navigateToMinseo = navigateToMinseo,
-        navigateToMinseok = navigateToMinseok,
+        navigateToRanking = navigateToRanking,
+        navigateToRecordWrite = navigateToGasWriting,
         modifier = modifier
     )
 }
 
 @Composable
 fun MainScreen(
-    navigateToMinseo: () -> Unit,
-    navigateToMinseok: () -> Unit,
+    navigateToRanking: () -> Unit,
+    navigateToRecordWrite: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -38,17 +38,17 @@ fun MainScreen(
         verticalArrangement = Arrangement.Center
     ) {
         Button(
-            onClick = navigateToMinseo,
+            onClick = navigateToRanking,
             modifier = modifier
         ) {
-            Text("to Minseo")
+            Text("to Ranking")
         }
         Spacer(modifier = Modifier.height(20.dp))
         Button(
-            onClick = navigateToMinseok,
+            onClick = navigateToRecordWrite,
             modifier = modifier
         ) {
-            Text("to Minseok")
+            Text("to Rankingk")
         }
     }
 }
@@ -58,8 +58,8 @@ fun MainScreen(
 private fun PreviewMainScreen() {
     KONKUKHACKATHONTEAM3Theme {
         MainScreen(
-            navigateToMinseo = {},
-            navigateToMinseok = {}
+            navigateToRanking = {},
+            navigateToRecordWrite = {}
         )
     }
 }

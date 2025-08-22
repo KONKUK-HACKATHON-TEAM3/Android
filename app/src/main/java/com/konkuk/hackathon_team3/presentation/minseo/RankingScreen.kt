@@ -8,34 +8,34 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.konkuk.hackathon_team3.ui.theme.KONKUKHACKATHONTEAM3Theme
 
 @Composable
-fun MinseoRoute(
-    navigateToMinseok: () -> Unit,
+fun RankingRoute(
+    navigateToRecordWrite: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    MinseoScreen(
-        navigateToMinseok = navigateToMinseok,
+    RankingScreen(
+        navigateToRecordWrite = navigateToRecordWrite,
         modifier = modifier
     )
 }
 
 @Composable
-fun MinseoScreen(
-    navigateToMinseok: () -> Unit,
+fun RankingScreen(
+    navigateToRecordWrite: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Button(
-        onClick = navigateToMinseok
+        onClick = navigateToRecordWrite
     ) {
-        Text("to Minseok")
+        Text("to Rankingk")
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun PreviewMinseoScreen() {
+private fun PreviewRankingScreen() {
     KONKUKHACKATHONTEAM3Theme {
-        MinseoScreen(
-            navigateToMinseok = {}
+        RankingScreen(
+            navigateToRecordWrite = {}
         )
     }
 }
