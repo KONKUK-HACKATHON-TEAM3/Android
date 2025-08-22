@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.konkuk.hackathon_team3.R
@@ -15,7 +16,9 @@ class NotificationReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         context?.let {
             // 권한 확인(권한이 없으면 알림을 표시하지 않음)
-            if (context.checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                context.checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
+            ) {
                 return
             }
 
@@ -26,13 +29,13 @@ class NotificationReceiver : BroadcastReceiver() {
 
             val clickPendingIntent = PendingIntent.getActivity(
                 context,
-                /*requestCode=*/1001,
+                1001,
                 clickIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
 
             // 알림 생성
-            val notification = NotificationCompat.Builder(it, "channel_id")
+            val notification = NotificationCompat.Builder(it, "channel_gas_v1")
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setContentTitle("가스")
                 .setContentText("생존 신고를 아직 작성하지 않으셨네요. 작성하러 가볼까요?")
