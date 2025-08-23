@@ -1,5 +1,6 @@
 [versions]
 agp = "8.7.0"
+converterGson = "3.0.0"
 kotlin = "2.0.21"
 coreKtx = "1.10.1"
 junit = "4.13.2"
@@ -13,6 +14,8 @@ appcompat = "1.7.0"
 coil = "2.4.0"
 
 #Third Party
+naverspeechNcpSdk = "1.1.4"
+naverspeechNcpSdkAndroid = "1.1.8"
 okhttp = "4.11.0"
 retrofit = "2.9.0"
 retrofitKotlinSerializationConverter = "1.0.0"
@@ -20,6 +23,7 @@ kotlinxSerializationJson = "1.7.3"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -38,6 +42,8 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 coil-base = { group = "io.coil-kt", name = "coil", version.ref = "coil" }
 # Third Party
+naverspeech-ncp-sdk = { module = "com.naver.speech.client:naverspeech-ncp-sdk", version.ref = "naverspeechNcpSdk" }
+naverspeech-ncp-sdk-android = { module = "com.naver.speech.clientapi:naverspeech-ncp-sdk-android", version.ref = "naverspeechNcpSdkAndroid" }
 okhttp-bom = { group = "com.squareup.okhttp3", name = "okhttp-bom", version.ref = "okhttp" }
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp" }
 okhttp-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor" }
