@@ -7,8 +7,9 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.konkuk.hackathon_team3.presentation.Ranking.RankingRoute
-import com.konkuk.hackathon_team3.presentation.Rankingk.GasWritingRoute
+import com.konkuk.hackathon_team3.presentation.minseo.RankingRoute
+import com.konkuk.hackathon_team3.presentation.minseok.GasWritingRoute
+
 
 @Composable
 fun MainNavHost(
