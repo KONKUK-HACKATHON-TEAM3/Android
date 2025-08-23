@@ -22,7 +22,6 @@ data class GasWritingUiState(
     val enrollButtonEnabled: Boolean = false,
     val textRecord: String = "",
 
-    // 음성 녹음 관련 변수들
     val isRecording: Boolean = false,
     val hasAudioPermission: Boolean = false,
     val recordingError: String? = null,
