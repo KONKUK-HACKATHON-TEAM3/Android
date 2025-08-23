@@ -51,7 +51,7 @@ fun HomeRankingComponent(
 
     LaunchedEffect(Unit) {
         while (true) {
-            delay(3000L)
+            delay(2000L)
             currentIndex = (currentIndex + 1) % rankings.size.coerceAtLeast(1)
         }
     }
@@ -79,7 +79,7 @@ fun HomeRankingComponent(
             modifier = Modifier
                 .clipToBounds()
         ) {
-            Box(Modifier.weight(1f)) { // Box로 감싸서 높이 확보
+            Box(Modifier.weight(1f)) {
                 AnimatedContent(
                     targetState = rankings.getOrNull(currentIndex),
                     transitionSpec = {
