@@ -74,9 +74,7 @@ fun HomeRankingComponent(
         )
         Spacer(modifier = Modifier.height(20.dp))
 
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
+        Row(modifier = Modifier
                 .clipToBounds()
         ) {
             Box(Modifier.weight(1f)) {
