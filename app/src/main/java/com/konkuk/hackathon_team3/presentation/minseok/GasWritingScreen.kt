@@ -1,26 +1,63 @@
 package com.konkuk.hackathon_team3.presentation.minseok
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
+import android.os.Environment
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.konkuk.hackathon_team3.presentation.util.noRippleClickable
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import com.konkuk.hackathon_team3.R
 import com.konkuk.hackathon_team3.ui.theme.KONKUKHACKATHONTEAM3Theme
+import java.io.File
+import java.io.FileOutputStream
+
 
 @Composable
 fun GasWritingRoute(
@@ -31,441 +68,208 @@ fun GasWritingRoute(
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
 
-    // 권한 요청 런처
-    val permissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        viewModel.updatePermission(isGranted)
+    val cameraLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.TakePicture()
+    ) { success ->
+        Log.d("Camera", "사진 촬영 결과: $success")
+        if (success) {
+            val uri = uiState.imageUri
+            if (uri != null) {
+                try {
+                    val inputStream = context.contentResolver.openInputStream(uri)
+                    val bitmap = BitmapFactory.decodeStream(inputStream)
+
+                    // 새 파일로 저장
+                    val savedFile = saveBitmapToFile(context, bitmap)
+                    val newUri = FileProvider.getUriForFile(
+                        context,
+                        "${context.packageName}.provider",
+                        savedFile
+                    )
+
+                    Log.d("Camera", "새 Uri 생성 완료: $newUri")
+                    viewModel.setImageUri(newUri)
+
+                } catch (e: Exception) {
+                    Log.e("Camera", "사진 불러오기 실패", e)
+                }
+            }
+        } else {
+            Log.d("Camera", "사진 촬영 실패")
+            viewModel.setImageUri(null)
+        }
     }
 
-    // 권한 확인
+    val audioPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        viewModel.updateAudioPermission(isGranted)
+    }
+
+    val cameraPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        viewModel.updateCameraPermission(isGranted)
+        if (isGranted) {
+            val uri = createImageUri(context)
+            viewModel.setImageUri(uri)
+            cameraLauncher.launch(uri)
+        }
+    }
+
     LaunchedEffect(Unit) {
-        val hasPermission = ContextCompat.checkSelfPermission(
-            context,
-            Manifest.permission.RECORD_AUDIO
+        val hasAudioPermission = ContextCompat.checkSelfPermission(
+            context, Manifest.permission.RECORD_AUDIO
         ) == PackageManager.PERMISSION_GRANTED
 
-        if (hasPermission) {
-            viewModel.updatePermission(true)
-        } else {
-            permissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
-        }
+        val hasCameraPermission = ContextCompat.checkSelfPermission(
+            context, Manifest.permission.CAMERA
+        ) == PackageManager.PERMISSION_GRANTED
+
+        viewModel.updateAudioPermission(hasAudioPermission)
+        viewModel.updateCameraPermission(hasCameraPermission)
     }
 
     GasWritingScreen(
         uiState = uiState,
         navigateToRanking = navigateToRanking,
-        recordButtonClicked = { viewModel.recordButtonClicked(context = context) },
-        playButtonClicked = { viewModel.playRecording() },
-        // 새로 추가된 함수들
-        updateClientId = viewModel::updateClientId,
-        updateClientSecret = viewModel::updateClientSecret,
-        updateLanguage = viewModel::updateLanguage,
-        clearText = viewModel::clearText,
-        clearErrors = viewModel::clearErrors,
+        onImageClick = {
+            if (uiState.hasCameraPermission) {
+                val uri = createImageUri(context)
+                viewModel.setImageUri(uri)
+                cameraLauncher.launch(uri)
+            } else {
+                cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+            }
+        },
+        onRecordingToggle = {
+            if (uiState.hasAudioPermission) {
+                viewModel.toggleRecording(context)
+            } else {
+                audioPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
+            }
+        },
+        onTextChange = viewModel::updateTextContent,
+        onClearText = viewModel::clearText,
+        onClearError = viewModel::clearError,
         modifier = modifier
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+fun createImageUri(context: Context): Uri {
+    val imageFile = File(
+        context.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+        "temp_${System.currentTimeMillis()}.jpg"
+    )
+    return FileProvider.getUriForFile(
+        context,
+        "${context.packageName}.provider",
+        imageFile
+    )
+}
+private fun saveBitmapToFile(context: Context, bitmap: Bitmap): File {
+    val file = File(
+        context.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+        "photo_${System.currentTimeMillis()}.jpg"
+    )
+    FileOutputStream(file).use { out ->
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
+    }
+    return file
+}
+
 @Composable
 fun GasWritingScreen(
     uiState: GasWritingUiState,
     navigateToRanking: () -> Unit,
-    recordButtonClicked: () -> Unit,
-    playButtonClicked: () -> Unit,
-    // 새로 추가된 파라미터들
-    updateClientId: (String) -> Unit,
-    updateClientSecret: (String) -> Unit,
-    updateLanguage: (String) -> Unit,
-    clearText: () -> Unit,
-    clearErrors: () -> Unit,
+    onImageClick: () -> Unit,
+    onRecordingToggle: () -> Unit,
+    onTextChange: (String) -> Unit,
+    onClearText: () -> Unit,
+    onClearError: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp)
-            .verticalScroll(rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(20.dp)
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
 
-        // 🎯 상단: 기존 랭킹 버튼
-        Button(
-            onClick = navigateToRanking,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("to Ranking")
-        }
-
-        // 🎯 권한 상태 알림
-        if (!uiState.hasAudioPermission) {
-            Card(
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.errorContainer
-                ),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    text = "⚠️ 마이크 권한이 필요합니다",
-                    modifier = Modifier.padding(16.dp),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onErrorContainer,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-        }
-
-        // 🎯 API 키 설정 카드
-        Card(
+        // 상단 헤더
+        Row(
             modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceVariant
-            )
-        ) {
-            Column(
-                modifier = Modifier.padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                Text(
-                    "🔧 실시간 STT 설정 (선택사항)",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-
-                OutlinedTextField(
-                    value = uiState.clientId,
-                    onValueChange = updateClientId,
-                    label = { Text("Client ID") },
-                    placeholder = { Text("네이버 클라우드 Client ID") },
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = true
-                )
-
-                OutlinedTextField(
-                    value = uiState.clientSecret,
-                    onValueChange = updateClientSecret,
-                    label = { Text("Client Secret") },
-                    placeholder = { Text("네이버 클라우드 Client Secret") },
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = true
-                )
-
-                // 언어 선택 드롭다운
-                var expanded by remember { mutableStateOf(false) }
-                val languages = mapOf(
-                    "Kor" to "🇰🇷 한국어",
-                    "Eng" to "🇺🇸 영어",
-                    "Jpn" to "🇯🇵 일본어",
-                    "Chn" to "🇨🇳 중국어"
-                )
-
-                ExposedDropdownMenuBox(
-                    expanded = expanded,
-                    onExpandedChange = { expanded = !expanded }
-                ) {
-                    OutlinedTextField(
-                        value = languages[uiState.selectedLanguage] ?: "🇰🇷 한국어",
-                        onValueChange = {},
-                        readOnly = true,
-                        label = { Text("언어") },
-                        trailingIcon = {
-                            ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
-                        },
-                        modifier = Modifier
-                            .menuAnchor()
-                            .fillMaxWidth()
-                    )
-
-                    ExposedDropdownMenu(
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false }
-                    ) {
-                        languages.forEach { (code, name) ->
-                            DropdownMenuItem(
-                                text = { Text(name) },
-                                onClick = {
-                                    updateLanguage(code)
-                                    expanded = false
-                                }
-                            )
-                        }
-                    }
-                }
-
-                Text(
-                    "💡 API 키를 입력하면 녹음 중 실시간 텍스트 변환이 가능합니다",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    fontStyle = FontStyle.Italic
-                )
-            }
-        }
-
-        // 🎯 녹음 상태 표시 카드
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(
-                containerColor = if (uiState.isRecording)
-                    MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.1f)
-                else
-                    MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.1f)
-            )
-        ) {
-            Column(
-                modifier = Modifier.padding(20.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                // 녹음 버튼 (기존 스타일 유지하되 강조)
-                Text(
-                    text = if (uiState.isRecording) "🔴 녹음 중..." else "🎤 녹음하기",
-                    modifier = Modifier.noRippleClickable(onClick = recordButtonClicked),
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Bold,
-                    color = if (uiState.isRecording) Color.Red else MaterialTheme.colorScheme.primary
-                )
-
-                // 실시간 STT 상태
-                if (uiState.isRecording) {
-                    if (uiState.clientId.isNotEmpty()) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            Text(
-                                "🟢 실시간 STT 작동 중",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = Color(0xFF4CAF50),
-                                fontWeight = FontWeight.Medium
-                            )
-
-                            if (uiState.chunkCount > 0) {
-                                Text(
-                                    "| 청크 #${uiState.chunkCount}",
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            }
-
-                            if (uiState.isProcessingSTT) {
-                                CircularProgressIndicator(
-                                    modifier = Modifier.size(16.dp),
-                                    strokeWidth = 2.dp,
-                                    color = MaterialTheme.colorScheme.primary
-                                )
-                            }
-                        }
-                    } else {
-                        Text(
-                            "📁 파일 녹음만 진행 중 (실시간 STT 비활성)",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            fontStyle = FontStyle.Italic
-                        )
-                    }
-                }
-            }
-        }
-
-        // 🎯 재생 버튼 (기존 스타일 유지)
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(
-                containerColor = if (uiState.audioRecord != null)
-                    MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.3f)
-                else
-                    MaterialTheme.colorScheme.surfaceVariant
-            )
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = if (uiState.audioRecord == null) "📂 음성파일 비어있음" else "▶️ 재생하기",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .noRippleClickable {
-                        if (uiState.audioRecord != null) {
-                            playButtonClicked()
-                        }
-                    }
-                    .padding(20.dp),
-                style = MaterialTheme.typography.titleMedium,
-                color = if (uiState.audioRecord != null)
-                    MaterialTheme.colorScheme.primary
-                else
-                    MaterialTheme.colorScheme.onSurfaceVariant,
-                fontWeight = if (uiState.audioRecord != null) FontWeight.Medium else FontWeight.Normal
+                "새 게시물",
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Bold
             )
+
+            Button(
+                onClick = {
+                    navigateToRanking()
+                }
+            ) {
+                Text("완료")
+            }
         }
 
-        // 🎯 실시간 텍스트 결과 표시
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .heightIn(min = 120.dp, max = 400.dp)
+                .height(250.dp)
+                .clickable { onImageClick() },
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+            )
         ) {
-            Column(
-                modifier = Modifier.padding(16.dp)
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        "📝 실시간 텍스트",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        // 처리 상태 표시
-                        if (uiState.isProcessingSTT) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.size(16.dp),
-                                strokeWidth = 2.dp,
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                            Text(
-                                "변환중",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                        }
-
-                        if (uiState.realTimeFullText.isNotEmpty()) {
-                            TextButton(
-                                onClick = clearText,
-                                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
-                            ) {
-                                Text("지우기", style = MaterialTheme.typography.bodySmall)
-                            }
-                        }
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                // 텍스트 영역
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f, fill = false),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
-                    )
-                ) {
-                    Box(
+                if (uiState.imageUri != null) {
+                    AsyncImage(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(uiState.imageUri)
+                            .crossfade(true)
+                            .build(),
+                        contentDescription = "촬영된 이미지",
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(12.dp)
-                            .verticalScroll(rememberScrollState())
+                            .clip(RoundedCornerShape(8.dp)),
+                        contentScale = ContentScale.Crop
+                    )
+
+                    FloatingActionButton(
+                        onClick = onImageClick,
+                        modifier = Modifier
+                            .align(Alignment.BottomEnd)
+                            .padding(16.dp),
+                        containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f)
                     ) {
-                        when {
-                            // 아무것도 없을 때
-                            uiState.realTimeFullText.isEmpty() && !uiState.isRecording -> {
-                                Text(
-                                    "🎤 녹음을 시작하면 여기에 실시간으로 텍스트가 나타납니다\n\n💡 실시간 변환을 위해서는 위에서 API 키를 설정해주세요",
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    fontStyle = FontStyle.Italic,
-                                    lineHeight = MaterialTheme.typography.bodyMedium.lineHeight
-                                )
-                            }
-
-                            // 녹음 중인데 API 키 없음
-                            uiState.isRecording && uiState.realTimeFullText.isEmpty() && uiState.clientId.isEmpty() -> {
-                                Text(
-                                    "🔑 실시간 텍스트 변환을 보려면 위에서 API 키를 입력하세요\n\n현재는 파일 녹음만 진행 중입니다",
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    fontStyle = FontStyle.Italic,
-                                    lineHeight = MaterialTheme.typography.bodyMedium.lineHeight
-                                )
-                            }
-
-                            // 녹음 중인데 아직 텍스트 없음
-                            uiState.isRecording && uiState.realTimeFullText.isEmpty() && uiState.clientId.isNotEmpty() && !uiState.isProcessingSTT -> {
-                                Text(
-                                    "🎤 음성 인식 대기 중...\n말씀해주시면 2초마다 텍스트로 변환됩니다",
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.primary,
-                                    fontStyle = FontStyle.Italic,
-                                    lineHeight = MaterialTheme.typography.bodyMedium.lineHeight
-                                )
-                            }
-
-                            // 텍스트가 있을 때
-                            else -> {
-                                Column(
-                                    verticalArrangement = Arrangement.spacedBy(4.dp)
-                                ) {
-                                    // 확정된 텍스트 (검은색)
-                                    if (uiState.finalText.isNotEmpty()) {
-                                        Text(
-                                            text = uiState.finalText,
-                                            style = MaterialTheme.typography.bodyLarge,
-                                            color = MaterialTheme.colorScheme.onSurface,
-                                            lineHeight = MaterialTheme.typography.bodyLarge.lineHeight
-                                        )
-                                    }
-
-                                    // 실시간 변환 중인 텍스트 (회색, 이탤릭)
-                                    if (uiState.partialText.isNotEmpty()) {
-                                        Text(
-                                            text = uiState.partialText,
-                                            style = MaterialTheme.typography.bodyLarge,
-                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                            fontStyle = FontStyle.Italic,
-                                            lineHeight = MaterialTheme.typography.bodyLarge.lineHeight
-                                        )
-                                    }
-
-                                    // 변환 중 표시
-                                    if (uiState.isProcessingSTT && uiState.realTimeFullText.isNotEmpty()) {
-                                        Text(
-                                            "⏳ 변환 중...",
-                                            style = MaterialTheme.typography.bodySmall,
-                                            color = MaterialTheme.colorScheme.primary,
-                                            fontStyle = FontStyle.Italic
-                                        )
-                                    }
-                                }
-                            }
-                        }
+                        Icon(Icons.Default.Add, contentDescription = "재촬영", tint = Color.White)
                     }
-                }
-
-                // 하단 상태 정보
-                if (uiState.isRecording && uiState.clientId.isNotEmpty()) {
-                    Spacer(modifier = Modifier.height(8.dp))
-                    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                } else {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Text(
-                            "🔴 실시간 STT 활성",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = Color.Red,
-                            fontWeight = FontWeight.Medium
+                        Icon(
+                            Icons.Default.Add,
+                            contentDescription = null,
+                            modifier = Modifier.size(48.dp),
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
-
                         Text(
-                            "언어: ${when(uiState.selectedLanguage) {
-                                "Kor" -> "🇰🇷 한국어"
-                                "Eng" -> "🇺🇸 영어"
-                                "Jpn" -> "🇯🇵 일본어"
-                                "Chn" -> "🇨🇳 중국어"
-                                else -> "🇰🇷 한국어"
-                            }}",
+                            "탭해서 사진 촬영",
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Text(
+                            "카메라로 사진을 찍어보세요",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -474,128 +278,172 @@ fun GasWritingScreen(
             }
         }
 
-        // 🎯 에러 메시지들
-        // STT 에러
+        // 🎯 텍스트 입력 영역 (실시간 STT + TextField)
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        "내용 작성",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        // 실시간 STT 상태
+                        if (uiState.isProcessingSTT) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(16.dp),
+                                strokeWidth = 2.dp
+                            )
+                            Text(
+                                "변환중",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
+
+                        if (uiState.textContent.isNotEmpty()) {
+                            TextButton(onClick = onClearText) {
+                                Text("지우기")
+                            }
+                        }
+                    }
+                }
+
+                // TextField (수정 가능한 텍스트)
+                OutlinedTextField(
+                    value = uiState.textContent,
+                    onValueChange = onTextChange,
+                    modifier = Modifier.fillMaxSize(),
+                    placeholder = {
+                        Text(
+                            if (uiState.isRecording) "🎤 말씀해주세요..." else "텍스트를 입력하거나 음성 버튼을 눌러 말해보세요",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    },
+                    minLines = 8,
+                    maxLines = 12
+                )
+            }
+        }
+
+        // 🎯 하단 컨트롤
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // 실시간 음성 인식 버튼
+            FloatingActionButton(
+                onClick = onRecordingToggle,
+                containerColor = if (uiState.isRecording) Color.Red else MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(56.dp)
+            ) {
+                Icon(
+                    imageVector = ImageVector.vectorResource(if (uiState.isRecording) R.drawable.ic_puase else R.drawable.ic_record),
+                    contentDescription = if (uiState.isRecording) "녹음 중지" else "음성 인식 시작",
+                    tint = Color.White
+                )
+            }
+
+            // 상태 텍스트
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = when {
+                        !uiState.hasAudioPermission -> "마이크 권한 필요"
+                        uiState.isRecording -> "🔴 실시간 음성 인식 중..."
+                        else -> "음성 버튼을 눌러 말해보세요"
+                    },
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = if (uiState.isRecording) FontWeight.Bold else FontWeight.Normal,
+                    color = if (uiState.isRecording) Color.Red else MaterialTheme.colorScheme.onSurface
+                )
+
+                if (uiState.isRecording && uiState.textContent.isNotEmpty()) {
+                    Text(
+                        "${uiState.textContent.length}자",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+        }
+
+        // 에러 메시지
         uiState.sttError?.let { error ->
             Card(
                 colors = CardDefaults.cardColors(
                     containerColor = MaterialTheme.colorScheme.errorContainer
-                ),
-                modifier = Modifier.fillMaxWidth()
+                )
             ) {
                 Row(
-                    modifier = Modifier.padding(16.dp),
+                    modifier = Modifier.padding(12.dp),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text("❌", style = MaterialTheme.typography.titleMedium)
-
                     Text(
-                        text = "STT 오류: $error",
-                        style = MaterialTheme.typography.bodyMedium,
+                        text = error,
+                        style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onErrorContainer,
                         modifier = Modifier.weight(1f)
                     )
 
-                    TextButton(
-                        onClick = clearErrors,
-                        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
-                    ) {
-                        Text("닫기", style = MaterialTheme.typography.bodySmall)
+                    TextButton(onClick = onClearError) {
+                        Text("닫기")
                     }
                 }
-            }
-        }
-
-        // 녹음 에러
-        uiState.recordingError?.let { error ->
-            Card(
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.errorContainer
-                ),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Row(
-                    modifier = Modifier.padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Text("⚠️", style = MaterialTheme.typography.titleMedium)
-
-                    Text(
-                        text = "녹음 오류: $error",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onErrorContainer,
-                        modifier = Modifier.weight(1f)
-                    )
-
-                    TextButton(
-                        onClick = clearErrors,
-                        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
-                    ) {
-                        Text("닫기", style = MaterialTheme.typography.bodySmall)
-                    }
-                }
-            }
-        }
-
-        // 🎯 도움말 카드 (하단)
-        Card(
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-            ),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Column(
-                modifier = Modifier.padding(16.dp)
-            ) {
-                Text(
-                    "💡 사용 방법",
-                    style = MaterialTheme.typography.titleSmall,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Text(
-                    "1️⃣ API 키 입력 (선택사항)\n" +
-                            "2️⃣ '녹음하기' 터치하여 녹음 시작\n" +
-                            "3️⃣ 말씀하시면 실시간으로 텍스트 변환\n" +
-                            "4️⃣ '녹음 중...' 터치하여 중지\n" +
-                            "5️⃣ '재생하기'로 녹음 파일 확인",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    lineHeight = MaterialTheme.typography.bodySmall.lineHeight
-                )
             }
         }
     }
 }
 
-@Preview(showBackground = true, heightDp = 800)
+// 임시 이미지 URI 생성 (메모리에서만 사용)
+//private fun createImageUri(context: Context): Uri {
+//    // 앱 전용 임시 디렉토리 사용 (앱 삭제시 자동 정리됨)
+//    val tempFile = File(context.cacheDir, "temp_camera_${System.currentTimeMillis()}.jpg")
+//    Log.d("Camera", "임시 이미지 파일: ${tempFile.absolutePath}")
+//
+//    return androidx.core.content.FileProvider.getUriForFile(
+//        context,
+//        "${context.packageName}.provider",
+//        tempFile
+//    )
+//}
+
+
+@Preview(showBackground = true)
 @Composable
 private fun PreviewGasWritingScreen() {
     KONKUKHACKATHONTEAM3Theme {
         GasWritingScreen(
-            navigateToRanking = {},
-            recordButtonClicked = {},
-            playButtonClicked = {},
-            updateClientId = {},
-            updateClientSecret = {},
-            updateLanguage = {},
-            clearText = {},
-            clearErrors = {},
             uiState = GasWritingUiState(
-                hasAudioPermission = true,
+                imageUri = null,
+                textContent = "안녕하세요, 실시간 음성인식으로 작성된 텍스트입니다. 이 텍스트는 수정할 수 있어요!",
                 isRecording = true,
-                clientId = "sample_client_id",
-                finalText = "안녕하세요, 실시간 음성인식 테스트입니다.",
-                partialText = "현재 변환 중인 텍스트...",
-                chunkCount = 3,
-                isProcessingSTT = true,
-                audioRecord = null
-            )
+                hasAudioPermission = true,
+                hasCameraPermission = true,
+                isProcessingSTT = false
+            ),
+            navigateToRanking = {},
+            onImageClick = {},
+            onRecordingToggle = {},
+            onTextChange = {},
+            onClearText = {},
+            onClearError = {}
         )
     }
 }
