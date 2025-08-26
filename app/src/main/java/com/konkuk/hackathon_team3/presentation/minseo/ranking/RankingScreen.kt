@@ -1,4 +1,4 @@
-package com.konkuk.hackathon_team3.presentation.minseo
+package com.konkuk.hackathon_team3.presentation.minseo.ranking
 
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
