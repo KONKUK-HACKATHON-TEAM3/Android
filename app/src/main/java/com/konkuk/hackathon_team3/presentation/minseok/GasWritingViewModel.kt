@@ -1,160 +1,351 @@
 package com.konkuk.hackathon_team3.presentation.minseok
 
+import android.Manifest
+import android.content.Context
+import android.media.AudioFormat
+import android.media.AudioRecord
+import android.media.MediaRecorder
 import android.net.Uri
+import android.util.Log
+import androidx.annotation.RequiresPermission
 import androidx.lifecycle.ViewModel
-import com.konkuk.hackathon_team3.data.service.ServicePool
+import androidx.lifecycle.viewModelScope
+import com.konkuk.hackathon_team3.data.service.ClovaServicePool
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
+import java.io.ByteArrayOutputStream
 import java.io.File
-import android.content.Context
-import android.media.MediaPlayer
-import android.media.MediaRecorder
-import android.util.Log
+import java.io.FileOutputStream
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
 data class GasWritingUiState(
-    val pageState: Int = 1,
-    val imageRecord: Uri? = null,
-    val audioRecord: File? = null,
-    val enrollButtonEnabled: Boolean = false,
-    val textRecord: String = "",
+    // 게시물 관련
+    val imageUri: Uri? = null,
+    val textContent: String = "",
 
+    // 실시간 STT 관련
     val isRecording: Boolean = false,
     val hasAudioPermission: Boolean = false,
-    val recordingError: String? = null,
+    val hasCameraPermission: Boolean = false,
+    val isProcessingSTT: Boolean = false,
+    val sttError: String? = null
 )
 
-
 class GasWritingViewModel : ViewModel() {
-    private val exampleService by lazy { ServicePool.exampleService }
 
     private val _uiState = MutableStateFlow(GasWritingUiState())
     val uiState: StateFlow<GasWritingUiState> = _uiState.asStateFlow()
 
-    private var mediaRecorder: MediaRecorder? = null
-    private var outputFile: File? = null
+    // 🎯 고정 값들
+    companion object{
+        private const val CLIENT_ID = "fsg56x4fn7"
+        private const val CLIENT_SECRET = "ng7hVU1DwYZ7CwM2TfjAej8nfmyGzkbq0DX6TpE8"
+        private const val LANGUAGE = "Kor"
 
-    private var mediaPlayer: MediaPlayer? = null
+        private const val CHUNK_DURATION_MS = 600L
 
+        private const val PROCESSING_DELAY_MS = 20L
+    }
 
+    // 실시간 STT용만 남김
+    private var audioRecord: AudioRecord? = null
+    private var recordingJob: Job? = null
 
-    fun recordButtonClicked(context: Context) {
+    // 오디오 설정
+    private val sampleRate = 16000
+    private val channelConfig = AudioFormat.CHANNEL_IN_MONO
+    private val audioFormat = AudioFormat.ENCODING_PCM_16BIT
+    private val bufferSize = AudioRecord.getMinBufferSize(sampleRate, channelConfig, audioFormat) * 2
+
+    private val clovaSpeechApi = ClovaServicePool.clovaSpeechService
+
+    // 권한 관리
+    fun updateAudioPermission(hasPermission: Boolean) {
+        _uiState.value = _uiState.value.copy(hasAudioPermission = hasPermission)
+    }
+
+    fun updateCameraPermission(hasPermission: Boolean) {
+        _uiState.value = _uiState.value.copy(hasCameraPermission = hasPermission)
+    }
+
+    // 이미지 설정
+    fun setImageUri(uri: Uri?) {
+        _uiState.value = _uiState.value.copy(imageUri = uri)
+    }
+
+    // 텍스트 수정 (TextField용)
+    fun updateTextContent(text: String) {
+        _uiState.value = _uiState.value.copy(textContent = text)
+    }
+
+    fun clearText() {
+        _uiState.value = _uiState.value.copy(textContent = "")
+    }
+
+    // 🎯 실시간 STT 토글
+    @RequiresPermission(Manifest.permission.RECORD_AUDIO)
+    fun toggleRecording(context: Context) {
         if (_uiState.value.isRecording) {
-            // 녹음 중지
-            stopRecording()
+            stopRealTimeSTT()
         } else {
-            // 녹음 시작
-            startRecording(context)
+            startRealTimeSTT(context)
         }
     }
 
-    fun updatePermission(hasPermission: Boolean) {
-        _uiState.value = _uiState.value.copy(
-            hasAudioPermission = hasPermission
-        )
-    }
-
-    private fun startRecording(context: Context) {
-        Log.d("RecordWriteViewModel", "startRecording called")
-
-        // 권한 체크
+    @RequiresPermission(Manifest.permission.RECORD_AUDIO)
+    private fun startRealTimeSTT(context: Context) {
         if (!_uiState.value.hasAudioPermission) {
-            _uiState.value = _uiState.value.copy(
-                recordingError = "녹음 권한이 필요합니다"
-            )
+            _uiState.value = _uiState.value.copy(sttError = "마이크 권한이 필요합니다")
             return
         }
 
         try {
-            // 파일 생성
-            outputFile = createOutputFile(context)
-            Log.d("RecordWriteViewModel", "Output file created: ${outputFile?.absolutePath}")
-
-            // MediaRecorder 설정
-            mediaRecorder = MediaRecorder().apply {
-                setAudioSource(MediaRecorder.AudioSource.MIC)
-                setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
-                setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
-                setOutputFile(outputFile?.absolutePath)
-                prepare()
-                start()
-            }
-
-            Log.d("RecordWriteViewModel", "Recording started successfully")
-
-            // UI 상태 업데이트
-            _uiState.value = _uiState.value.copy(
-                isRecording = true,
-                recordingError = null
+            audioRecord = AudioRecord(
+                MediaRecorder.AudioSource.MIC,
+                sampleRate,
+                channelConfig,
+                audioFormat,
+                bufferSize
             )
+
+            if (audioRecord?.state == AudioRecord.STATE_INITIALIZED) {
+                audioRecord?.startRecording()
+
+                _uiState.value = _uiState.value.copy(
+                    isRecording = true,
+                    sttError = null
+                )
+
+                startRealTimeProcessing(context)
+                Log.d("GasWritingViewModel", "실시간 STT 시작")
+            }
         } catch (e: Exception) {
-            Log.e("RecordWriteViewModel", "Recording failed", e)
+            Log.e("GasWritingViewModel", "실시간 STT 시작 실패", e)
             _uiState.value = _uiState.value.copy(
-                recordingError = "녹음 시작 실패: ${e.message}"
+                sttError = "실시간 STT 시작 실패: ${e.message}"
             )
         }
     }
 
-    private fun stopRecording() {
+    private fun startRealTimeProcessing(context: Context) {
+        recordingJob = viewModelScope.launch(Dispatchers.IO) {
+            val bufferSizePerChunk = (sampleRate * 2 * CHUNK_DURATION_MS / 1000).toInt()
+            val audioBuffer = ShortArray(bufferSizePerChunk / 2)
+            val audioChunks = mutableListOf<ByteArray>()
+
+            var lastProcessTime = System.currentTimeMillis()
+
+            while (_uiState.value.isRecording &&
+                audioRecord?.recordingState == AudioRecord.RECORDSTATE_RECORDING) {
+
+                try {
+                    val bytesRead = audioRecord?.read(audioBuffer, 0, audioBuffer.size) ?: 0
+
+                    if (bytesRead > 0) {
+                        val byteArray = ByteArray(bytesRead * 2)
+                        for (i in 0 until bytesRead) {
+                            val shortValue = audioBuffer[i]
+                            byteArray[i * 2] = (shortValue.toInt() and 0xFF).toByte()
+                            byteArray[i * 2 + 1] = ((shortValue.toInt() shr 8) and 0xFF).toByte()
+                        }
+                        audioChunks.add(byteArray)
+
+                        val currentTime = System.currentTimeMillis()
+                        if (currentTime - lastProcessTime >= CHUNK_DURATION_MS && audioChunks.isNotEmpty()) {
+
+                            withContext(Dispatchers.Main) {
+                                _uiState.value = _uiState.value.copy(isProcessingSTT = true)
+                            }
+
+                            try {
+                                val combinedAudio = combineAudioChunks(audioChunks.toList())
+                                val tempWavFile = createTempWavFile(context, combinedAudio)
+
+                                launch {
+                                    processSTTChunk(tempWavFile)
+                                }
+
+                                audioChunks.clear()
+                                lastProcessTime = currentTime
+
+                            } catch (e: Exception) {
+                                Log.e("GasWritingViewModel", "청크 처리 중 오류", e)
+                            }
+
+                            withContext(Dispatchers.Main) {
+                                _uiState.value = _uiState.value.copy(isProcessingSTT = false)
+                            }
+                        }
+                    }
+
+                    delay(PROCESSING_DELAY_MS)
+
+                } catch (e: Exception) {
+                    Log.e("GasWritingViewModel", "오디오 읽기 오류", e)
+                    break
+                }
+            }
+        }
+    }
+
+    private suspend fun processSTTChunk(audioFile: File) {
         try {
-            mediaRecorder?.apply {
-                stop()
-                reset()
-                release()
+            val requestBody = audioFile.readBytes().toRequestBody("application/octet-stream".toMediaTypeOrNull())
+
+            val response = withContext(Dispatchers.IO) {
+                clovaSpeechApi.speechToText(
+                    clientId = CLIENT_ID,
+                    clientSecret = CLIENT_SECRET,
+                    language = LANGUAGE,
+                    audioData = requestBody
+                )
             }
-            mediaRecorder = null
 
-            // UI 상태 업데이트
-            _uiState.value = _uiState.value.copy(
-                isRecording = false,
-                audioRecord = outputFile,
-                recordingError = null
-            )
+            if (response.isSuccessful) {
+                response.body()?.let { speechResponse ->
+                    val recognizedText = speechResponse.text.trim()
 
-            Log.d("GasWritingViewModel", "audioFile")
+                    if (recognizedText.isNotEmpty()) {
+                        withContext(Dispatchers.Main) {
+                            val currentState = _uiState.value
+                            val newText = if (currentState.textContent.isEmpty()) {
+                                recognizedText
+                            } else {
+                                "${currentState.textContent} $recognizedText"
+                            }
+
+                            _uiState.value = currentState.copy(
+                                textContent = newText,
+                                sttError = null
+                            )
+                        }
+                    }
+                }
+            } else {
+                withContext(Dispatchers.Main) {
+                    val errorMessage = when (response.code()) {
+                        400 -> "잘못된 요청"
+                        401 -> "인증 실패"
+                        413 -> "파일이 너무 큼"
+                        429 -> "API 호출 한도 초과"
+                        500 -> "서버 오류"
+                        else -> "STT 오류"
+                    }
+
+                    _uiState.value = _uiState.value.copy(sttError = errorMessage)
+                }
+            }
+
+            audioFile.delete()
+
         } catch (e: Exception) {
-            _uiState.value = _uiState.value.copy(
-                isRecording = false,
-                recordingError = "녹음 중지 실패: ${e.message}"
-            )
+            withContext(Dispatchers.Main) {
+                _uiState.value = _uiState.value.copy(sttError = "네트워크 오류")
+            }
+            audioFile.delete()
         }
     }
 
-    private fun createOutputFile(context: Context): File {
-        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
-        val storageDir = context.getExternalFilesDir(null)
-        return File.createTempFile(
-            "AUDIO_${timeStamp}_",
-            ".m4a",
-            storageDir
+    private fun stopRealTimeSTT() {
+        recordingJob?.cancel()
+        recordingJob = null
+
+        audioRecord?.apply {
+            try {
+                if (recordingState == AudioRecord.RECORDSTATE_RECORDING) {
+                    stop()
+                }
+                release()
+            } catch (e: Exception) {
+                Log.e("GasWritingViewModel", "AudioRecord 중지 오류", e)
+            }
+        }
+        audioRecord = null
+
+        _uiState.value = _uiState.value.copy(
+            isRecording = false,
+            isProcessingSTT = false
         )
     }
 
-    fun playRecording() {
-        outputFile?.let { file ->
-            try {
-                mediaPlayer = MediaPlayer().apply {
-                    setDataSource(file.absolutePath)
-                    prepare()
-                    start()
-
-                    setOnCompletionListener {
-                        Log.d("RecordWriteViewModel", "재생 완료")
-                    }
-                }
-                Log.d("RecordWriteViewModel", "재생 시작: ${file.name}")
-            } catch (e: Exception) {
-                Log.e("RecordWriteViewModel", "재생 실패", e)
-            }
+    // 유틸리티 함수들
+    private fun combineAudioChunks(chunks: List<ByteArray>): ByteArray {
+        val outputStream = ByteArrayOutputStream()
+        chunks.forEach { chunk ->
+            outputStream.write(chunk)
         }
+        return outputStream.toByteArray()
+    }
+
+    private fun createTempWavFile(context: Context, audioData: ByteArray): File {
+        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss_SSS", Locale.getDefault()).format(Date())
+        val file = File.createTempFile("realtime_${timeStamp}_", ".wav", context.cacheDir)
+
+        try {
+            FileOutputStream(file).use { fos ->
+                writeWavHeader(fos, audioData.size)
+                fos.write(audioData)
+            }
+        } catch (e: IOException) {
+            Log.e("GasWritingViewModel", "WAV 파일 생성 실패", e)
+        }
+
+        return file
+    }
+
+    private fun writeWavHeader(fos: FileOutputStream, audioDataSize: Int) {
+        val totalDataLen = audioDataSize + 36
+        val channels = 1
+        val byteRate = sampleRate * channels * 2
+
+        fos.write("RIFF".toByteArray())
+        fos.write(intToByteArray(totalDataLen))
+        fos.write("WAVE".toByteArray())
+        fos.write("fmt ".toByteArray())
+        fos.write(intToByteArray(16))
+        fos.write(shortToByteArray(1))
+        fos.write(shortToByteArray(channels.toShort()))
+        fos.write(intToByteArray(sampleRate))
+        fos.write(intToByteArray(byteRate))
+        fos.write(shortToByteArray((channels * 2).toShort()))
+        fos.write(shortToByteArray(16))
+        fos.write("data".toByteArray())
+        fos.write(intToByteArray(audioDataSize))
+    }
+
+    private fun intToByteArray(value: Int): ByteArray {
+        return byteArrayOf(
+            (value and 0xFF).toByte(),
+            ((value shr 8) and 0xFF).toByte(),
+            ((value shr 16) and 0xFF).toByte(),
+            ((value shr 24) and 0xFF).toByte()
+        )
+    }
+
+    private fun shortToByteArray(value: Short): ByteArray {
+        return byteArrayOf(
+            (value.toInt() and 0xFF).toByte(),
+            ((value.toInt() shr 8) and 0xFF).toByte()
+        )
+    }
+
+    fun clearError() {
+        _uiState.value = _uiState.value.copy(sttError = null)
     }
 
     override fun onCleared() {
         super.onCleared()
-        mediaRecorder?.release()
-        mediaRecorder = null
+        stopRealTimeSTT()
     }
 }
