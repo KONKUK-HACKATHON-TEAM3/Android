@@ -11,10 +11,11 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.CAMERA" />
 
-
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
     <application
         android:allowBackup="true"
@@ -41,6 +42,10 @@
         <meta-data
             android:name="com.naver.speech.client.appid"
             android:value="fsg56x4fn7" />
+      
+        <receiver
+            android:name=".presentation.minseo.alarm.NotificationReceiver"
+            android:exported="false" />
 
         <activity
             android:name=".presentation.main.SplashActivity"

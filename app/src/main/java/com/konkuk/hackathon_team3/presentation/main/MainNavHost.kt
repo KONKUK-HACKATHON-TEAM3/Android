@@ -10,7 +10,6 @@ import androidx.navigation.compose.composable
 import com.konkuk.hackathon_team3.presentation.minseo.RankingRoute
 import com.konkuk.hackathon_team3.presentation.minseok.GasWritingRoute
 
-
 @Composable
 fun MainNavHost(
     navController: NavHostController,
