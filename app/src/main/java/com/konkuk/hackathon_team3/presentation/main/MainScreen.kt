@@ -24,11 +24,15 @@ import com.konkuk.hackathon_team3.ui.theme.KONKUKHACKATHONTEAM3Theme
 fun MainRoute(
     navigateToRanking: () -> Unit,
     navigateToGasWriting: () -> Unit,
+    navigateToAddFamily: () -> Unit,
+    navigateToCalendar: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     MainScreen(
         navigateToRanking = navigateToRanking,
         navigateToRecordWrite = navigateToGasWriting,
+        navigateToCalendar = navigateToCalendar,
+        navigateToAddFamily = navigateToAddFamily,
         modifier = modifier
     )
 }
@@ -37,13 +41,15 @@ fun MainRoute(
 fun MainScreen(
     navigateToRanking: () -> Unit,
     navigateToRecordWrite: () -> Unit,
+    navigateToCalendar: () -> Unit,
+    navigateToAddFamily: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     var showDetailGas by remember { mutableStateOf(false) }
 
     Box(
         modifier = modifier.fillMaxSize()
-    ){
+    ) {
         Column(
             modifier = Modifier,
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -66,7 +72,21 @@ fun MainScreen(
             Button(
                 onClick = { showDetailGas = true }
             ) {
-                Text( text = "생존 신고 내역")
+                Text(text = "생존 신고 내역")
+            }
+            Spacer(modifier = Modifier.height(20.dp))
+            Button(
+                onClick = navigateToCalendar,
+                modifier = modifier
+            ) {
+                Text("to Calendar")
+            }
+            Spacer(modifier = Modifier.height(20.dp))
+            Button(
+                onClick = navigateToAddFamily,
+                modifier = modifier
+            ) {
+                Text("to Add Family")
             }
         }
 
@@ -83,7 +103,9 @@ private fun PreviewMainScreen() {
     KONKUKHACKATHONTEAM3Theme {
         MainScreen(
             navigateToRanking = {},
-            navigateToRecordWrite = {}
+            navigateToRecordWrite = {},
+            navigateToCalendar = {},
+            navigateToAddFamily = {}
         )
     }
 }

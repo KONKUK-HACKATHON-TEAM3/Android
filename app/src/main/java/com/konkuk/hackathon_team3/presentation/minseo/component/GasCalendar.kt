@@ -62,7 +62,8 @@ private object CalendarLogic {
 
 @Composable
 fun GasCalendar(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onDateClicked: (LocalDate) -> Unit = {}
 ) {
     val today = LocalDate.now()
     var selected by remember { mutableStateOf(today) }
@@ -149,8 +150,7 @@ fun GasCalendar(
                                 .background(if (isSelected) Color(0xFFFF6E00) else Color.Transparent)
                                 .noRippleClickable {
                                     selected = date
-                                    // 필요하면 선택 시 보이는 달도 이동:
-                                    // visibleMonth = YearMonth.from(date)
+                                    onDateClicked(date)
                                 }
                         ) {
                             Text(
