@@ -64,7 +64,113 @@ private object CalendarLogic {
 fun GasCalendar(
     modifier: Modifier = Modifier
 ) {
+    val today = LocalDate.now()
+    var selected by remember { mutableStateOf(today) }
+    var visibleMonth by remember { mutableStateOf(YearMonth.from(today)) }
 
+    val monthLabel = "${visibleMonth.year}년 ${visibleMonth.monthValue}월"
+    val monthDates = remember(visibleMonth) { CalendarLogic.monthGridDates(visibleMonth) }
+
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .roundedBackgroundWithPadding(
+                backgroundColor = Color(0xFF202020),
+                cornerRadius = 16.dp,
+                padding = PaddingValues(vertical = 16.dp)
+            )
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "<",
+                color = Color(0xFFBDBDBD),
+                fontSize = 18.sp,
+                modifier = Modifier
+                    .padding(horizontal = 8.dp)
+                    .noRippleClickable { visibleMonth = visibleMonth.minusMonths(1) }
+            )
+            Text(
+                text = monthLabel,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = Color.White,
+                modifier = Modifier.padding(horizontal = 8.dp)
+            )
+            Text(
+                text = ">",
+                color = Color(0xFFBDBDBD),
+                fontSize = 18.sp,
+                modifier = Modifier
+                    .padding(horizontal = 8.dp)
+                    .noRippleClickable { visibleMonth = visibleMonth.plusMonths(1) }
+            )
+        }
+        Spacer(Modifier.height(8.dp))
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 12.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            DayOfWeekType.sundayFirst.forEach {
+                Box(Modifier.size(36.dp), contentAlignment = Alignment.Center) {
+                    Text(
+                        text = it.description,
+                        color = Color(0xFFBDBDBD),
+                        fontSize = 12.sp,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+        }
+        Spacer(Modifier.height(6.dp))
+
+        Column(modifier = Modifier.padding(horizontal = 12.dp)) {
+            monthDates.chunked(7).forEach { week ->
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    week.forEach { date ->
+                        val inMonth = YearMonth.from(date) == visibleMonth
+                        val isSelected = date == selected
+                        val isToday = date == today
+
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier
+                                .size(36.dp)
+                                .clip(CircleShape)
+                                .background(if (isSelected) Color(0xFFFF6E00) else Color.Transparent)
+                                .noRippleClickable {
+                                    selected = date
+                                    // 필요하면 선택 시 보이는 달도 이동:
+                                    // visibleMonth = YearMonth.from(date)
+                                }
+                        ) {
+                            Text(
+                                text = date.dayOfMonth.toString(),
+                                color = when {
+                                    isSelected -> Color.White
+                                    !inMonth -> Color(0xFF777777)
+                                    isToday -> Color(0xFFFF6E00)
+                                    else -> Color.White
+                                },
+                                fontSize = 13.sp,
+                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+                            )
+                        }
+                    }
+                }
+                Spacer(Modifier.height(6.dp))
+            }
+        }
+    }
 }
 
 @Composable
