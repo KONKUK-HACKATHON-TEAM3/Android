@@ -60,7 +60,7 @@ fun HomeRankingComponent(
         modifier = modifier
             .fillMaxWidth()
             .roundedBackgroundWithPadding(
-                backgroundColor = Color(0xFF202020),
+                backgroundColor = Color.White,
                 cornerRadius = 16.dp,
                 padding = PaddingValues(vertical = 24.dp, horizontal = 20.dp)
             )
@@ -68,7 +68,7 @@ fun HomeRankingComponent(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "이번 주 순위", color = Color.White,
+            text = "이번 주 순위", color = Color.Black,
             fontSize = 14.sp,
             fontWeight = FontWeight.SemiBold
         )
@@ -95,7 +95,7 @@ fun HomeRankingComponent(
             Icon(
                 imageVector = ImageVector.vectorResource(R.drawable.ic_right_arrow_16),
                 contentDescription = null,
-                tint = Color.White
+                tint = Color.Black
             )
         }
     }
@@ -108,7 +108,7 @@ fun RankingItem(modifier: Modifier = Modifier, rankingData: RankingData) {
         Text(
             text = "${rankingData.rank}위 ${rankingData.nickname}",
             style = TextStyle(
-                color = Color.White,
+                color = Color.Black,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.SemiBold
             )
@@ -117,7 +117,7 @@ fun RankingItem(modifier: Modifier = Modifier, rankingData: RankingData) {
         Text(
             text = "${rankingData.point}점",
             style = TextStyle(
-                color = Color.White,
+                color = Color.Black,
                 fontSize = 9.sp,
                 fontWeight = FontWeight.Normal
             )

@@ -1,4 +1,4 @@
-package com.konkuk.hackathon_team3.presentation.minseok
+package com.konkuk.hackathon_team3.presentation.minseok.writing
 
 import android.Manifest
 import android.content.Context
@@ -48,6 +48,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
@@ -231,7 +232,8 @@ fun GasWritingScreen(
                     contentDescription = "촬영된 이미지",
                     modifier = Modifier
                         .fillMaxSize()
-                        .clip(RoundedCornerShape(8.dp)),
+                        .clip(RoundedCornerShape(16.dp))
+                        .rotate(90f),
                     contentScale = ContentScale.Crop
                 )
             } else {
