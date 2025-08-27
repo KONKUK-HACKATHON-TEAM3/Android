@@ -1,9 +1,6 @@
 package com.konkuk.hackathon_team3.presentation.minseok.ranking
 
-import android.net.Uri
 import androidx.lifecycle.ViewModel
-import com.konkuk.hackathon_team3.data.service.ServicePool
-import com.konkuk.hackathon_team3.presentation.minseok.writing.GasWritingUiState
 import com.konkuk.hackathon_team3.presentation.model.RankingData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

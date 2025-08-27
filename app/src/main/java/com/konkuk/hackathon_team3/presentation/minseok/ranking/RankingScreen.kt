@@ -27,8 +27,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.konkuk.hackathon_team3.R
 import com.konkuk.hackathon_team3.presentation.main.GasTopbar
 import com.konkuk.hackathon_team3.presentation.minseok.RankingItem
-import com.konkuk.hackathon_team3.presentation.minseok.writing.GasWritingUiState
-import com.konkuk.hackathon_team3.presentation.minseok.writing.GasWritingViewModel
 import com.konkuk.hackathon_team3.presentation.util.roundedBackgroundWithPadding
 import com.konkuk.hackathon_team3.ui.theme.KONKUKHACKATHONTEAM3Theme
 
