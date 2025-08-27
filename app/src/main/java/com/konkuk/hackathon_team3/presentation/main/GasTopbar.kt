@@ -28,13 +28,15 @@ fun GasTopbar(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .padding(16.dp)
     ) {
         Icon(
             imageVector = ImageVector.vectorResource(R.drawable.ic_back_arrow),
             contentDescription = null,
             tint = Color.Unspecified,
-            modifier = Modifier.align(Alignment.CenterStart).noRippleClickable(backButtonClicked),
+            modifier = Modifier
+                .padding(16.dp)
+                .align(Alignment.CenterStart)
+                .noRippleClickable(backButtonClicked),
         )
         Icon(
             imageVector = ImageVector.vectorResource(R.drawable.ic_app_logo),
@@ -42,13 +44,15 @@ fun GasTopbar(
             tint = Color.Unspecified,
             modifier = Modifier.align(Alignment.Center)
         )
-        if (isHomeScreen)
-        {
+        if (isHomeScreen) {
             Icon(
                 imageVector = ImageVector.vectorResource(R.drawable.ic_bell),
                 contentDescription = null,
                 tint = Color.Unspecified,
-                modifier = Modifier.align(Alignment.CenterEnd).noRippleClickable(navigateToNotification),
+                modifier = Modifier
+                    .padding(16.dp)
+                    .align(Alignment.CenterEnd)
+                    .noRippleClickable(navigateToNotification),
             )
         }
     }
