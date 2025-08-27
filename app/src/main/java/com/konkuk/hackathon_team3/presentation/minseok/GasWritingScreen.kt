@@ -10,11 +10,13 @@ import android.os.Environment
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -195,8 +197,6 @@ fun GasWritingScreen(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-
-        // 상단 헤더
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -220,14 +220,13 @@ fun GasWritingScreen(
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(250.dp)
                 .clickable { onImageClick() },
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
             )
         ) {
             Box(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.aspectRatio(1f).background(color = Color(0xFFD9D9D9)),
                 contentAlignment = Alignment.Center
             ) {
                 if (uiState.imageUri != null) {
