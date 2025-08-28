@@ -10,6 +10,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.konkuk.hackathon_team3.presentation.minseo.addfamily.AddFamilyRoute
+import com.konkuk.hackathon_team3.presentation.minseo.alarm.AlarmRoute
 import com.konkuk.hackathon_team3.presentation.minseo.calendar.GasCalendarRoute
 import com.konkuk.hackathon_team3.presentation.minseo.ranking.RankingRoute
 import com.konkuk.hackathon_team3.presentation.minseok.GasWritingRoute
@@ -34,7 +35,8 @@ fun MainNavHost(
                     navigateToRanking = { navController.navigateToRanking() },
                     navigateToGasWriting = { navController.navigateToGasWriting() },
                     navigateToCalendar = { navController.navigateToCalendar() },
-                    navigateToAddFamily = { navController.navigateToAddFamily() }
+                    navigateToAddFamily = { navController.navigateToAddFamily() },
+                    navigateToAlarm = { navController.navigateToAlarm() }
                 )
             }
 
@@ -58,6 +60,9 @@ fun MainNavHost(
                 AddFamilyRoute()
             }
 
+            composable(route = "alarm") {
+                AlarmRoute()
+            }
         }
     }
 }

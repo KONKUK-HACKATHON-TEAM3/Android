@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -23,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.konkuk.hackathon_team3.R
+import com.konkuk.hackathon_team3.presentation.main.GasTopbar
 import com.konkuk.hackathon_team3.presentation.util.noRippleClickable
 import com.konkuk.hackathon_team3.presentation.util.roundedBackgroundWithPadding
 import com.konkuk.hackathon_team3.ui.theme.KONKUKHACKATHONTEAM3Theme
@@ -44,42 +46,52 @@ fun AddFamilyScreen(
     val clipboard = LocalClipboardManager.current
 
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .roundedBackgroundWithPadding(
-                backgroundColor = Color.White,
-                cornerRadius = 16.dp,
-                padding = PaddingValues(vertical = 24.dp)
-            ),
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = modifier.fillMaxWidth()
     ) {
-        Text(
-            text = "입장 코드",
-            fontSize = 14.sp,
-            fontWeight = FontWeight.SemiBold
+        GasTopbar(
+            backButtonClicked = {},
+            modifier = Modifier.padding(vertical = 10.dp)
         )
-        Spacer(Modifier.height(20.dp))
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
+        Column(
+            modifier = modifier
+                .fillMaxWidth()
+                .roundedBackgroundWithPadding(
+                    backgroundColor = Color.White,
+                    cornerRadius = 16.dp,
+                    padding = PaddingValues(vertical = 24.dp)
+                ),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Icon(
-                imageVector = ImageVector.vectorResource(R.drawable.ic_copy),
-                contentDescription = null,
-                modifier = Modifier
-                    .noRippleClickable {
-                        clipboard.setText(AnnotatedString(inviteCode))
-                    }
-            )
-            Spacer(Modifier.width(8.dp))
 
             Text(
-                text = inviteCode,
-                fontSize = 20.sp,
+                text = "입장 코드",
+                fontSize = 14.sp,
                 fontWeight = FontWeight.SemiBold
             )
+            Spacer(Modifier.height(20.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_copy),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .noRippleClickable {
+                            clipboard.setText(AnnotatedString(inviteCode))
+                        }
+                )
+                Spacer(Modifier.width(8.dp))
+
+                Text(
+                    text = inviteCode,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
         }
     }
 }
