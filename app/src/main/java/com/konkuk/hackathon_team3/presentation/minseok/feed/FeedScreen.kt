@@ -33,6 +33,7 @@ fun FeedRoute(
     FeedScreen(
         uiState = uiState,
         onCloseAll = onCloseAll,
+        onToggleLike = { id, liked -> viewModel.toggleLike(id, liked) },
         modifier = modifier
     )
 }
@@ -41,6 +42,7 @@ fun FeedRoute(
 fun FeedScreen(
     modifier: Modifier = Modifier,
     onCloseAll: () -> Unit,
+    onToggleLike: (Long, Boolean) -> Unit,
     uiState: FeedUiState = FeedUiState()
 ) {
     var showDetail by remember { mutableStateOf(false) }
@@ -56,6 +58,7 @@ fun FeedScreen(
             showDetail = false
             onCloseAll()
         },
+        onToggleLike = onToggleLike,
         modifier = modifier
     )
 }
@@ -65,7 +68,9 @@ fun FeedScreen(
 private fun PreviewFeedScreen() {
     KONKUKHACKATHONTEAM3Theme {
         FeedScreen(
-            onCloseAll = {}
+            onCloseAll = {},
+            onToggleLike = { _, _ -> },
+            uiState = FeedUiState()
         )
     }
 }
