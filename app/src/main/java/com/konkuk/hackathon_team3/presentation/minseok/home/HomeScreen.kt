@@ -27,6 +27,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -96,6 +97,35 @@ fun HomerScreen(
             onRefresh = onRefresh,
             modifier = Modifier.fillMaxSize()
         ) {
+            Column(modifier = Modifier.fillMaxSize()) {
+                Row (modifier = Modifier.padding(top=86.dp)){
+                    Spacer(modifier = Modifier.weight(1f))
+                    Icon(
+                        imageVector = ImageVector.vectorResource(R.drawable.ic_super_big_gas),
+                        contentDescription = null,
+                        tint = Color.Unspecified
+                    )
+                }
+                Spacer(modifier = Modifier.weight(1f))
+                Icon(
+                    modifier= Modifier
+                        .padding(start = 36.dp)
+                        .blur(radius = 6.dp),
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_blur_circle),
+                    contentDescription = null,
+                    tint = Color.Unspecified
+                )
+
+                Icon(
+                    modifier= Modifier
+                        .padding(bottom = 45.dp)
+                        .blur(radius = 8.dp),
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_blur_gas),
+                    contentDescription = null,
+                    tint = Color.Unspecified
+                )
+
+            }
             LazyColumn {
                 item {
                     GasTopbar(

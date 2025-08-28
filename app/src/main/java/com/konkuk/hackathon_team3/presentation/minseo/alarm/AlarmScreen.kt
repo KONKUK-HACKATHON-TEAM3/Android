@@ -63,7 +63,7 @@ fun AlarmScreen(
         modifier = modifier.fillMaxWidth()
     ) {
         GasTopbar(
-            backButtonClicked = {},
+            backButtonClicked = popBackStack,
             modifier = Modifier.padding(vertical = 10.dp)
         )
 
