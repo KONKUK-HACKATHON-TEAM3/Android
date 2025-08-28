@@ -11,7 +11,7 @@ data class AlarmUiState(
     val alarmList: List<AlarmData> = listOf(
         AlarmData(
             message = "아빠님이 새로운 스토리를 공유했어요.",
-            time = LocalTime.parse("17:00:20")
+            time = LocalTime.parse("08:30:20")
         ),
         AlarmData(
             message = "이번 주 순위가 바뀌었어요. 지금 바로 확인해보세요.",

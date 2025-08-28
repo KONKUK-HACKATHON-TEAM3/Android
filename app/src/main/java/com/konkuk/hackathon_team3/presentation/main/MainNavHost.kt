@@ -107,7 +107,12 @@ fun MainNavHost(
             }
 
             composable(route = "alarm") {
-                AlarmRoute(popBackStack = { navController.popBackStack() })
+                AlarmRoute(
+                    navigateToFeed = { date ->
+                        navController.navigateToFeed(date)
+                    },
+                    popBackStack = { navController.popBackStack() }
+                )
             }
 
             composable(

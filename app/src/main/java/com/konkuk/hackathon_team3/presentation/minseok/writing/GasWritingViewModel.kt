@@ -490,7 +490,7 @@ class GasWritingViewModel : ViewModel() {
                 val mediaPart = MultipartBody.Part.createFormData("media", fileName, requestFile)
 
                 val textPart = text.toRequestBody("text/plain".toMediaTypeOrNull())
-                val memberIdPart = "1".toRequestBody("text/plain".toMediaTypeOrNull())
+                val memberIdPart = "2".toRequestBody("text/plain".toMediaTypeOrNull())
 
                 uploadService.postFeed(
                     memberId = memberIdPart,

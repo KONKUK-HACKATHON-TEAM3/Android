@@ -22,23 +22,27 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.konkuk.hackathon_team3.presentation.main.GasTopbar
 import com.konkuk.hackathon_team3.presentation.util.gasComponentDesign
+import com.konkuk.hackathon_team3.presentation.util.noRippleClickable
 import com.konkuk.hackathon_team3.ui.theme.KONKUKHACKATHONTEAM3Theme
 import com.konkuk.hackathon_team3.ui.theme.boldStyle
 import com.konkuk.hackathon_team3.ui.theme.regularStyle
 import kotlinx.coroutines.delay
 import java.time.Duration
+import java.time.LocalDate
 import java.time.LocalTime
 
 @Composable
 fun AlarmRoute(
-    popBackStack:()->Unit,
+    navigateToFeed: (LocalDate) -> Unit,
+    popBackStack: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: AlarmViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     AlarmScreen(
-        popBackStack=popBackStack,
+        navigateToFeed = navigateToFeed,
+        popBackStack = popBackStack,
         modifier = modifier,
         uiState = uiState
     )
@@ -46,7 +50,8 @@ fun AlarmRoute(
 
 @Composable
 fun AlarmScreen(
-    popBackStack:()->Unit,
+    navigateToFeed: (LocalDate) -> Unit,
+    popBackStack: () -> Unit,
     modifier: Modifier = Modifier,
     uiState: AlarmUiState = AlarmUiState()
 ) {
@@ -77,6 +82,7 @@ fun AlarmScreen(
             ) { alarm ->
                 Row(
                     modifier = Modifier
+                        .noRippleClickable { navigateToFeed(LocalDate.now()) }
                         .gasComponentDesign()
                         .fillMaxWidth()
                         .padding(21.dp),
@@ -110,6 +116,9 @@ private fun LocalTime.toRelative(now: LocalTime = LocalTime.now()): String {
 @Composable
 private fun PreviewAlarmScreen() {
     KONKUKHACKATHONTEAM3Theme {
-        AlarmScreen(popBackStack={})
+        AlarmScreen(
+            navigateToFeed = {},
+            popBackStack = {}
+        )
     }
 }
