@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 data class HomeUiState(
+    val isLoading: Boolean = false,
     val missionList: List<MissionData> = listOf(
         MissionData(
             title = "오늘의 사진",
@@ -100,11 +101,13 @@ class HomeViewModel : ViewModel() {
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
     init {
-        loadHome() // 초기화 시점에 호출
+        loadHome()
     }
 
     fun loadHome(memberId: Long = 1) {
         viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isLoading = true)
+
             try {
                 val data = homeService.getHome(memberId)
 
@@ -112,7 +115,9 @@ class HomeViewModel : ViewModel() {
                     missionList = data.dailyMissionList.map { it.toMissionData() },
                     recentFeedList = data.familyStoryList?.map { it.toHomeRecentFeedData() } ?: emptyList(),
                     rankingList = data.weeklyRanking.toRankingData(),
-                    familyList = data.familyList.map { it.toHomeFamilyData() }
+                    familyList = data.familyList.map { it.toHomeFamilyData() },
+                    isLoading = false
+
                 )
             } catch (e: Exception) {
                 Log.e("HomeViewModel", "loadHome failed: ${e.message}", e)
