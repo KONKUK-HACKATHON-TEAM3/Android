@@ -1,6 +1,5 @@
 package com.konkuk.hackathon_team3.presentation.minseo.onboarding
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -21,14 +19,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.konkuk.hackathon_team3.R
 import com.konkuk.hackathon_team3.presentation.util.AppGradients
+import com.konkuk.hackathon_team3.presentation.util.BouncingImage
 import com.konkuk.hackathon_team3.presentation.util.noRippleClickable
 import com.konkuk.hackathon_team3.presentation.util.roundedBackgroundWithPadding
 import com.konkuk.hackathon_team3.ui.theme.KONKUKHACKATHONTEAM3Theme
@@ -60,13 +57,10 @@ fun StartScreen(
     ) {
         Spacer(Modifier.weight(1f))
 
-        Icon(
-            imageVector = ImageVector.vectorResource(R.drawable.ic_start_logo),
-            contentDescription = "logo",
-            tint = Color.Unspecified
-
+        BouncingImage(
+            resId = R.drawable.ic_start_logo
         )
-        Spacer(Modifier.height(27.dp))
+        Spacer(Modifier.height(34.dp))
 
         Icon(
             imageVector = ImageVector.vectorResource(R.drawable.ic_start_text),
