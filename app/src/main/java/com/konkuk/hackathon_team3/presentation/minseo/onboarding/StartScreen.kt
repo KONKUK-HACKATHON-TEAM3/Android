@@ -1,6 +1,7 @@
 package com.konkuk.hackathon_team3.presentation.minseo.onboarding
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -70,6 +72,11 @@ fun StartScreen(
                 modifier = Modifier
                     .noRippleClickable(navigateToOnBoardingEnterCode)
                     .padding(horizontal = 16.dp)
+                    .border(
+                        width = 2.dp,
+                        color = Color.White.copy(alpha = 0.5f),
+                        shape = RoundedCornerShape(12.dp)
+                    )
                     .roundedBackgroundWithPadding(
                         backgroundBrush = AppGradients.Orange,
                         cornerRadius = 12.dp,
@@ -113,16 +120,16 @@ fun StartScreen(
             }
             Spacer(Modifier.height(20.dp))
 
-
             Box(
                 modifier = Modifier
                     .noRippleClickable(navigateToOnBoardingEnterNickName)
                     .padding(horizontal = 16.dp)
-                    .roundedBackgroundWithPadding(
-                        backgroundColor = Color.LightGray,
-                        cornerRadius = 12.dp,
-                        padding = PaddingValues(vertical = 16.dp)
+                    .border(
+                        width = 0.5.dp,
+                        color = Color.Black,
+                        shape = RoundedCornerShape(12.dp)
                     )
+                    .padding(vertical = 16.dp)
                     .fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
