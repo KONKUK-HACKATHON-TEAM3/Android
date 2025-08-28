@@ -27,6 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.konkuk.hackathon_team3.presentation.util.gasComponentDesign
 import com.konkuk.hackathon_team3.presentation.util.noRippleClickable
 import com.konkuk.hackathon_team3.presentation.util.roundedBackgroundWithPadding
 import com.konkuk.hackathon_team3.ui.theme.KONKUKHACKATHONTEAM3Theme
@@ -186,12 +187,8 @@ fun GasHomeCalendar(
 
     Column(
         modifier = modifier
-            .fillMaxWidth()
-            .roundedBackgroundWithPadding(
-                backgroundColor = Color(0xFF202020),
-                cornerRadius = 16.dp,
-                padding = PaddingValues(top = 20.dp, bottom = 14.dp)
-            )
+            .gasComponentDesign()
+            .padding(top = 20.dp, bottom = 14.dp)
             .noRippleClickable(onClick = {}),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -199,7 +196,7 @@ fun GasHomeCalendar(
             text = "가족 캘린더",
             fontSize = 14.sp,
             fontWeight = FontWeight.SemiBold,
-            color = Color.White
+            color = Color.Black
         )
         Spacer(Modifier.height(4.dp))
 
@@ -207,7 +204,7 @@ fun GasHomeCalendar(
             text = monthLabel,
             fontSize = 14.sp,
             fontWeight = FontWeight.SemiBold,
-            color = Color.White
+            color = Color.Black
         )
         Spacer(Modifier.height(8.dp))
 
@@ -221,7 +218,7 @@ fun GasHomeCalendar(
                 Box(Modifier.size(36.dp), contentAlignment = Alignment.Center) {
                     Text(
                         text = it.description,
-                        color = Color(0xFFBDBDBD),
+                        color = Color.Black,
                         fontSize = 12.sp,
                         textAlign = TextAlign.Center
                     )
@@ -245,15 +242,15 @@ fun GasHomeCalendar(
                     modifier = Modifier
                         .size(36.dp)
                         .clip(CircleShape)
-                        .background(if (isSelected) Color(0xFFFF6E00) else Color.Transparent)
+                        .background(if (isSelected) Color.White else Color.Transparent)
                         .noRippleClickable { selected = date }
                 ) {
                     Text(
                         text = date.dayOfMonth.toString(),
                         color = when {
-                            isSelected -> Color.White
-                            isToday -> Color(0xFFFF6E00)
-                            else -> Color.White
+                            isSelected -> Color.Black
+                            isToday -> Color.Black
+                            else -> Color.Black
                         },
                         fontSize = 13.sp,
                         fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal

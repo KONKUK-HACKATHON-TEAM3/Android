@@ -9,10 +9,8 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.with
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -20,7 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -37,7 +34,6 @@ import androidx.compose.ui.unit.sp
 import com.konkuk.hackathon_team3.R
 import com.konkuk.hackathon_team3.presentation.model.RankingData
 import com.konkuk.hackathon_team3.presentation.util.noRippleClickable
-import com.konkuk.hackathon_team3.presentation.util.roundedBackgroundWithPadding
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -58,23 +54,18 @@ fun HomeRankingComponent(
 
     Column(
         modifier = modifier
-            .fillMaxWidth()
-            .roundedBackgroundWithPadding(
-                backgroundColor = Color(0xFF202020),
-                cornerRadius = 16.dp,
-                padding = PaddingValues(vertical = 24.dp, horizontal = 20.dp)
-            )
             .noRippleClickable(onClick = navigateToRanking),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "이번 주 순위", color = Color.White,
+            text = "이번 주 순위", color = Color.Black,
             fontSize = 14.sp,
             fontWeight = FontWeight.SemiBold
         )
         Spacer(modifier = Modifier.height(20.dp))
 
-        Row(modifier = Modifier
+        Row(
+            modifier = Modifier
                 .clipToBounds()
         ) {
             Box(Modifier.weight(1f)) {
@@ -95,7 +86,7 @@ fun HomeRankingComponent(
             Icon(
                 imageVector = ImageVector.vectorResource(R.drawable.ic_right_arrow_16),
                 contentDescription = null,
-                tint = Color.White
+                tint = Color.Black
             )
         }
     }
@@ -108,7 +99,7 @@ fun RankingItem(modifier: Modifier = Modifier, rankingData: RankingData) {
         Text(
             text = "${rankingData.rank}위 ${rankingData.nickname}",
             style = TextStyle(
-                color = Color.White,
+                color = Color.Black,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.SemiBold
             )
@@ -117,7 +108,7 @@ fun RankingItem(modifier: Modifier = Modifier, rankingData: RankingData) {
         Text(
             text = "${rankingData.point}점",
             style = TextStyle(
-                color = Color.White,
+                color = Color.Black,
                 fontSize = 9.sp,
                 fontWeight = FontWeight.Normal
             )

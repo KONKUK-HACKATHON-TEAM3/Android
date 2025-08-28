@@ -1,19 +1,18 @@
 package com.konkuk.hackathon_team3.presentation.main
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.konkuk.hackathon_team3.presentation.minseo.addfamily.AddFamilyRoute
 import com.konkuk.hackathon_team3.presentation.minseo.alarm.AlarmRoute
 import com.konkuk.hackathon_team3.presentation.minseo.calendar.GasCalendarRoute
-import com.konkuk.hackathon_team3.presentation.minseo.ranking.RankingRoute
-import com.konkuk.hackathon_team3.presentation.minseok.GasWritingRoute
+import com.konkuk.hackathon_team3.presentation.minseok.home.MainRoute
+import com.konkuk.hackathon_team3.presentation.minseok.ranking.RankingRoute
+import com.konkuk.hackathon_team3.presentation.minseok.writing.GasWritingRoute
 
 @Composable
 fun MainNavHost(
@@ -21,9 +20,7 @@ fun MainNavHost(
     modifier: Modifier = Modifier
 ) {
     Box(
-        modifier = modifier
-            .fillMaxSize()
-            .background(color = Color.White)
+        modifier = modifier.fillMaxSize()
     ) {
         NavHost(
             navController = navController,
