@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -22,13 +22,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.konkuk.hackathon_team3.R
 import com.konkuk.hackathon_team3.presentation.util.gasComponentDesign
 import com.konkuk.hackathon_team3.presentation.util.noRippleClickable
-import com.konkuk.hackathon_team3.presentation.util.roundedBackgroundWithPadding
 import com.konkuk.hackathon_team3.ui.theme.KONKUKHACKATHONTEAM3Theme
 import com.konkuk.hackathon_team3.ui.theme.boldStyle
 import com.konkuk.hackathon_team3.ui.theme.regularStyle
@@ -76,22 +78,18 @@ fun GasCalendar(
 
     Column(
         modifier = modifier
+            .gasComponentDesign()
             .fillMaxWidth()
-            .roundedBackgroundWithPadding(
-                backgroundColor = Color(0xFF202020),
-                cornerRadius = 16.dp,
-                padding = PaddingValues(vertical = 16.dp)
-            )
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = "<",
-                color = Color(0xFFBDBDBD),
-                fontSize = 18.sp,
+            Icon(
+                imageVector = ImageVector.vectorResource(R.drawable.ic_left_arrow_16),
+                contentDescription = "이전 달",
+                tint = Color.Black,
                 modifier = Modifier
                     .padding(horizontal = 8.dp)
                     .noRippleClickable { visibleMonth = visibleMonth.minusMonths(1) }
@@ -100,13 +98,13 @@ fun GasCalendar(
                 text = monthLabel,
                 fontSize = 14.sp,
                 style = KONKUKHACKATHONTEAM3Theme.typography.boldStyle,
-                color = Color.White,
+                color = Color.Black,
                 modifier = Modifier.padding(horizontal = 8.dp)
             )
-            Text(
-                text = ">",
-                color = Color(0xFFBDBDBD),
-                fontSize = 18.sp,
+            Icon(
+                imageVector = ImageVector.vectorResource(R.drawable.ic_right_arrow_16),
+                contentDescription = "다음 달",
+                tint = Color.Black,
                 modifier = Modifier
                     .padding(horizontal = 8.dp)
                     .noRippleClickable { visibleMonth = visibleMonth.plusMonths(1) }
