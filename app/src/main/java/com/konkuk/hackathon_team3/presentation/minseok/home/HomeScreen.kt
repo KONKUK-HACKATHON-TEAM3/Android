@@ -13,7 +13,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -33,7 +35,6 @@ import com.konkuk.hackathon_team3.presentation.minseok.HomeRankingComponent
 import com.konkuk.hackathon_team3.presentation.util.gasComponentDesign
 import com.konkuk.hackathon_team3.ui.theme.KONKUKHACKATHONTEAM3Theme
 
-
 @Composable
 fun MainRoute(
     navigateToRanking: () -> Unit,
@@ -46,7 +47,6 @@ fun MainRoute(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-
     HomerScreen(
         navigateToRanking = navigateToRanking,
         navigateToRecordWrite = navigateToGasWriting,
@@ -54,10 +54,13 @@ fun MainRoute(
         navigateToAddFamily = navigateToAddFamily,
         navigateToAlarm = navigateToAlarm,
         modifier = modifier,
-        uiState = uiState
+        uiState = uiState,
+        isRefreshing = uiState.isLoading, // 추가
+        onRefresh = { viewModel.loadHome() }
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomerScreen(
     navigateToRanking: () -> Unit,
@@ -66,103 +69,111 @@ fun HomerScreen(
     navigateToAddFamily: () -> Unit,
     navigateToAlarm: () -> Unit,
     modifier: Modifier = Modifier,
-    uiState: HomeUiState = HomeUiState()
+    uiState: HomeUiState = HomeUiState(),
+    isRefreshing: Boolean = false, // 수정
+    onRefresh: () -> Unit = {}
 ) {
-    LazyColumn(modifier = modifier) {
-        item {
-            GasTopbar(
-                isHomeScreen = true,
-            )
-        }
+    PullToRefreshBox(
+        isRefreshing = isRefreshing,
+        onRefresh = onRefresh,
+        modifier = modifier
+    ) {
+        LazyColumn {
+            item {
+                GasTopbar(
+                    isHomeScreen = true,
+                )
+            }
 
-        item {
-            Spacer(modifier = Modifier.height(12.dp))
-        }
+            item {
+                Spacer(modifier = Modifier.height(12.dp))
+            }
 
-        item {
-            LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                contentPadding = PaddingValues(start = 16.dp, end = 16.dp)
-            ) {
-                items(
-                    items = uiState.missionList
-                ) { mission ->
-                    HomeMissionItem(
-                        missionData = mission,
-                    )
+            item {
+                LazyRow(
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    contentPadding = PaddingValues(start = 16.dp, end = 16.dp)
+                ) {
+                    items(
+                        items = uiState.missionList
+                    ) { mission ->
+                        HomeMissionItem(
+                            missionData = mission,
+                        )
+                    }
                 }
             }
-        }
 
-        item {
-            Spacer(modifier = Modifier.height(12.dp))
-        }
+            item {
+                Spacer(modifier = Modifier.height(12.dp))
+            }
 
-        item {
-            Column(
-                modifier = Modifier
-                    .gasComponentDesign()
-                    .padding(vertical = 24.dp, horizontal = 28.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(text = "가족 스토리")
-                Text(text = "최근 업데이트: 2시간 전")
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+            item {
+                Column(
+                    modifier = Modifier
+                        .gasComponentDesign()
+                        .padding(vertical = 24.dp, horizontal = 28.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    uiState.recentFeedList.forEach { homeRecentFeedData ->
-                        Column(modifier = Modifier.weight(1f)) {
-                            Text(text = homeRecentFeedData.nickname)
-                            Spacer(modifier = Modifier.height(5.dp))
-                            AsyncImage(
-                                model = ImageRequest.Builder(LocalContext.current)
-                                    .data(homeRecentFeedData.imageUrl)
-                                    .crossfade(true)
-                                    .build(),
-                                contentDescription = "촬영된 이미지",
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .aspectRatio(1f)
-                                    .clip(RoundedCornerShape(6.dp)),
-                                contentScale = ContentScale.Crop
-                            )
+                    Text(text = "가족 스토리")
+                    Text(text = "최근 업데이트: 2시간 전")
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        uiState.recentFeedList.forEach { homeRecentFeedData ->
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(text = homeRecentFeedData.nickname)
+                                Spacer(modifier = Modifier.height(5.dp))
+                                AsyncImage(
+                                    model = ImageRequest.Builder(LocalContext.current)
+                                        .data(homeRecentFeedData.imageUrl)
+                                        .crossfade(true)
+                                        .build(),
+                                    contentDescription = "촬영된 이미지",
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .aspectRatio(1f)
+                                        .clip(RoundedCornerShape(6.dp)),
+                                    contentScale = ContentScale.Crop
+                                )
+                            }
                         }
                     }
                 }
             }
-        }
 
-        item {
-            Spacer(modifier = Modifier.height(12.dp))
-        }
+            item {
+                Spacer(modifier = Modifier.height(12.dp))
+            }
 
-        item {
-            HomeRankingComponent(
-                navigateToRanking = navigateToRanking,
-                rankings = uiState.rankingList,
-                modifier = Modifier
-                    .gasComponentDesign()
-                    .padding(vertical = 24.dp, horizontal = 20.dp)
-            )
-        }
+            item {
+                HomeRankingComponent(
+                    navigateToRanking = navigateToRanking,
+                    rankings = uiState.rankingList,
+                    modifier = Modifier
+                        .gasComponentDesign()
+                        .padding(vertical = 24.dp, horizontal = 20.dp)
+                )
+            }
 
-        item {
-            Spacer(modifier = Modifier.height(12.dp))
-        }
+            item {
+                Spacer(modifier = Modifier.height(12.dp))
+            }
 
-        item {
-            GasHomeCalendar()
-        }
+            item {
+                GasHomeCalendar()
+            }
 
-        item {
-            Spacer(modifier = Modifier.height(12.dp))
-        }
+            item {
+                Spacer(modifier = Modifier.height(12.dp))
+            }
 
-        item {
-            HomeAddFamilyComponent(
-                familyList = uiState.familyList
-            )
-            Spacer(modifier = Modifier.height(50.dp))
+            item {
+                HomeAddFamilyComponent(
+                    familyList = uiState.familyList
+                )
+                Spacer(modifier = Modifier.height(50.dp))
+            }
         }
     }
 }
