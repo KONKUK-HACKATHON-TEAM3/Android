@@ -51,7 +51,7 @@ fun GasTopbar(
             imageVector = ImageVector.vectorResource(R.drawable.ic_app_logo),
             contentDescription = null,
             tint = Color.Unspecified,
-            modifier = Modifier.align(Alignment.Center)
+            modifier = Modifier.align(Alignment.Center).padding(16.dp)
         )
         if (isHomeScreen) {
             Icon(
