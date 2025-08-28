@@ -72,7 +72,7 @@ inline fun Modifier.pressedEffectClickable(
         }
         .clickable(
             interactionSource = interactionSource,
-            indication = null // ripple 없음
+            indication = null
         ) {
             onClick()
         }
