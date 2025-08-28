@@ -81,4 +81,39 @@ class FeedViewModel : ViewModel() {
             }
         }
     }
+
+    fun toggleLike(feedId: Long, newLiked: Boolean, memberId: Long = 1) {
+        _uiState.value = _uiState.value.copy(
+            feedList = _uiState.value.feedList.map { f ->
+                if (f.feedId == feedId) {
+                    f.copy(
+                        likeStatus = newLiked,
+                        likeCount = (f.likeCount + if (newLiked) 1 else -1).coerceAtLeast(0)
+                    )
+                } else f
+            }
+        )
+        viewModelScope.launch {
+            try {
+                if (newLiked) {
+                    feedService.postLike(feedId, memberId)
+                } else {
+                    feedService.deleteLike(feedId, memberId)
+                }
+            } catch (e: Exception) {
+                Log.e("FeedViewModel", "toggleLike failed: ${e.message}", e)
+                _uiState.value = _uiState.value.copy(
+                    feedList = _uiState.value.feedList.map { f ->
+                        if (f.feedId == feedId) {
+                            f.copy(
+                                likeStatus = !newLiked,
+                                likeCount = (f.likeCount + if (newLiked) -1 else +1).coerceAtLeast(0)
+                            )
+                        } else f
+                    }
+                )
+            }
+        }
+    }
+
 }

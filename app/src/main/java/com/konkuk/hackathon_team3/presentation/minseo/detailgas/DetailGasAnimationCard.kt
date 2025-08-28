@@ -32,6 +32,7 @@ import kotlinx.coroutines.launch
 fun DetailGasAnimationCard(
     visible: Boolean,
     onDismiss: () -> Unit,
+    onToggleLike: (feedId: Long, newLiked: Boolean) -> Unit,
     modifier: Modifier = Modifier,
     uiState: FeedUiState = FeedUiState()
 ) {
@@ -105,7 +106,11 @@ fun DetailGasAnimationCard(
                     CardFront(onFlip = onFlip)
 
                 } else {
-                    CardBack(onCancel = onClose, uiState = uiState)
+                    CardBack(
+                        onCancel = onClose,
+                        uiState = uiState,
+                        onToggleLike = onToggleLike
+                    )
                 }
             }
         }
