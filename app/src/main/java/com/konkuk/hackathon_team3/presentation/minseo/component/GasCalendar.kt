@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -67,11 +68,15 @@ private object CalendarLogic {
 @Composable
 fun GasCalendar(
     modifier: Modifier = Modifier,
+    markedDates: List<LocalDate> = emptyList(),
+    selectedDate: LocalDate,
+    onMonthChanged: (YearMonth) -> Unit = {},
     onDateClicked: (LocalDate) -> Unit = {}
 ) {
     val today = LocalDate.now()
-    var selected by remember { mutableStateOf(today) }
     var visibleMonth by remember { mutableStateOf(YearMonth.from(today)) }
+
+    LaunchedEffect(Unit) { onMonthChanged(visibleMonth) }
 
     val monthLabel = "${visibleMonth.year}년 ${visibleMonth.monthValue}월"
     val monthDates = remember(visibleMonth) { CalendarLogic.monthGridDates(visibleMonth) }
@@ -93,7 +98,10 @@ fun GasCalendar(
                 tint = Color.Black,
                 modifier = Modifier
                     .padding(horizontal = 8.dp)
-                    .noRippleClickable { visibleMonth = visibleMonth.minusMonths(1) }
+                    .noRippleClickable {
+                        visibleMonth = visibleMonth.minusMonths(1)
+                        onMonthChanged(visibleMonth)
+                    }
             )
             Text(
                 text = monthLabel,
@@ -108,7 +116,10 @@ fun GasCalendar(
                 tint = Color.Black,
                 modifier = Modifier
                     .padding(horizontal = 8.dp)
-                    .noRippleClickable { visibleMonth = visibleMonth.plusMonths(1) }
+                    .noRippleClickable {
+                        visibleMonth = visibleMonth.plusMonths(1)
+                        onMonthChanged(visibleMonth)
+                    }
             )
         }
         Spacer(Modifier.height(8.dp))
@@ -141,8 +152,9 @@ fun GasCalendar(
                 ) {
                     week.forEach { date ->
                         val inMonth = YearMonth.from(date) == visibleMonth
-                        val isSelected = date == selected
+                        val isSelected = date == selectedDate
                         val isToday = date == today
+                        val isMarked = markedDates.contains(date)
 
                         Box(
                             contentAlignment = Alignment.Center,
@@ -151,10 +163,20 @@ fun GasCalendar(
                                 .clip(CircleShape)
                                 .background(if (isSelected) Color(0xFFFF8514) else Color.Transparent)
                                 .noRippleClickable {
-                                    selected = date
                                     onDateClicked(date)
                                 }
                         ) {
+
+                            if (isMarked && !isSelected) {
+                                Box(
+                                    modifier = Modifier
+                                        .align(Alignment.BottomCenter)
+                                        .size(8.dp)
+                                        .clip(CircleShape)
+                                        .background(Color.White)
+                                )
+                            }
+
                             Text(
                                 text = date.dayOfMonth.toString(),
                                 color = when {
@@ -268,7 +290,12 @@ fun GasHomeCalendar(
 @Composable
 private fun PreviewGasCalendar() {
     KONKUKHACKATHONTEAM3Theme {
-        GasCalendar()
+        GasCalendar(
+            markedDates = emptyList(),
+            selectedDate = LocalDate.now(),
+            onMonthChanged = {},
+            onDateClicked = {}
+        )
     }
 }
 

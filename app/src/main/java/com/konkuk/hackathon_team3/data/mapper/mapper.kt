@@ -1,5 +1,6 @@
 package com.konkuk.hackathon_team3.data.mapper
 
+import com.konkuk.hackathon_team3.data.dto.response.CalendarDto
 import com.konkuk.hackathon_team3.data.dto.response.DailyMissionDto
 import com.konkuk.hackathon_team3.data.dto.response.FamilyMemberDto
 import com.konkuk.hackathon_team3.data.dto.response.FamilyStoryDto
@@ -15,6 +16,19 @@ import com.konkuk.hackathon_team3.presentation.model.HomeRecentFeedData
 import com.konkuk.hackathon_team3.presentation.model.MissionData
 import com.konkuk.hackathon_team3.presentation.model.ProfileType
 import com.konkuk.hackathon_team3.presentation.model.RankingData
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
+
+
+private val ISO_DATE: DateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE
+
+fun CalendarDto.toLocalDates(
+    formatter: DateTimeFormatter = ISO_DATE
+): List<LocalDate> =
+    dateList.mapNotNull { s ->
+        try { LocalDate.parse(s, formatter) } catch (_: DateTimeParseException) { null }
+    }
 
 fun FeedDto.toFeedData(): FeedData =
     FeedData(
