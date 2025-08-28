@@ -33,11 +33,11 @@ import coil.request.ImageRequest
 import com.konkuk.hackathon_team3.R
 import com.konkuk.hackathon_team3.presentation.main.GasTopbar
 import com.konkuk.hackathon_team3.presentation.util.gasComponentDesign
+import com.konkuk.hackathon_team3.presentation.util.noRippleClickable
 import com.konkuk.hackathon_team3.ui.theme.KONKUKHACKATHONTEAM3Theme
 
 @Composable
 fun FeedRoute(
-    navigateToRecordWrite: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: FeedViewModel = viewModel()
 
@@ -46,14 +46,12 @@ fun FeedRoute(
 
     FeedScreen(
         uiState = uiState,
-        navigateToRecordWrite = navigateToRecordWrite,
         modifier = modifier
     )
 }
 
 @Composable
 fun FeedScreen(
-    navigateToRecordWrite: () -> Unit,
     modifier: Modifier = Modifier,
     uiState: FeedUiState = FeedUiState()
 ) {
@@ -65,10 +63,10 @@ fun FeedScreen(
         LazyColumn(
             modifier = Modifier
                 .gasComponentDesign()
-                .padding(11.dp),
+                .padding(horizontal = 11.dp),
         ) {
             itemsIndexed(uiState.feedList) { index, feed ->
-                Row {
+                Row (verticalAlignment = Alignment.CenterVertically){
                     Icon(
                         imageVector = ImageVector.vectorResource(id = feed.profile.profileImage),
                         contentDescription = null,
@@ -96,11 +94,13 @@ fun FeedScreen(
                 Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                     Text(text = "${feed.tag}")
                     Spacer(modifier = Modifier.weight(1f))
-                    Text(text = "${feed.likeCount}")
-                    Icon(
-                        imageVector = ImageVector.vectorResource(R.drawable.ic_list_false), contentDescription = null,
-                        tint = Color.Unspecified
-                    )
+                    Row (modifier = Modifier.noRippleClickable()){
+                        Text(text = "${feed.likeCount}")
+                        Icon(
+                            imageVector = ImageVector.vectorResource(R.drawable.ic_list_false), contentDescription = null,
+                            tint = Color.Unspecified
+                        )
+                    }
                 }
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -123,8 +123,6 @@ fun FeedScreen(
 @Composable
 private fun PreviewFeedScreen() {
     KONKUKHACKATHONTEAM3Theme {
-        FeedScreen(
-            navigateToRecordWrite = {},
-        )
+        FeedScreen()
     }
 }

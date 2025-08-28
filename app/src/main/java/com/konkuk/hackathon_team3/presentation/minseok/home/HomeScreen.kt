@@ -53,6 +53,7 @@ fun MainRoute(
     navigateToAddFamily: () -> Unit,
     navigateToCalendar: () -> Unit,
     navigateToAlarm: () -> Unit,
+    navigateToFeed: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = viewModel()
 ) {
@@ -66,8 +67,9 @@ fun MainRoute(
         navigateToAlarm = navigateToAlarm,
         modifier = modifier,
         uiState = uiState,
-        isRefreshing = uiState.isLoading, // 추가
-        onRefresh = { viewModel.loadHome() }
+        isRefreshing = uiState.isLoading,
+        onRefresh = { viewModel.loadHome() },
+        navigateToFeed = navigateToFeed
     )
 }
 
@@ -79,6 +81,7 @@ fun HomerScreen(
     navigateToCalendar: () -> Unit,
     navigateToAddFamily: () -> Unit,
     navigateToAlarm: () -> Unit,
+    navigateToFeed: () -> Unit,
     modifier: Modifier = Modifier,
     uiState: HomeUiState = HomeUiState(),
     isRefreshing: Boolean = false,
@@ -121,6 +124,7 @@ fun HomerScreen(
                     Column(
                         modifier = Modifier
                             .gasComponentDesign()
+                            .noRippleClickable(navigateToFeed)
                             .padding(vertical = 24.dp, horizontal = 28.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
@@ -212,7 +216,8 @@ private fun PreviewHomerScreen() {
             navigateToRecordWrite = {},
             navigateToCalendar = {},
             navigateToAddFamily = {},
-            navigateToAlarm = {}
+            navigateToAlarm = {},
+            navigateToFeed = {}
         )
     }
 }

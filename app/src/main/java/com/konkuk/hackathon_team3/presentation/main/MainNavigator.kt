@@ -64,3 +64,10 @@ fun NavController.navigateToAlarm() {
         popUpTo("alarm") { inclusive = true }
     }
 }
+
+fun NavController.navigateToFeed() {
+    navigate("feed") {
+        launchSingleTop = true
+        popUpTo("feed") { inclusive = true }
+    }
+}

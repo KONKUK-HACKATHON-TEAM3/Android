@@ -16,6 +16,7 @@ import com.konkuk.hackathon_team3.presentation.minseo.onboarding.OnBoardingEnter
 import com.konkuk.hackathon_team3.presentation.minseo.onboarding.OnBoardingProfileRoute
 import com.konkuk.hackathon_team3.presentation.minseo.onboarding.OnBoardingViewModel
 import com.konkuk.hackathon_team3.presentation.minseo.onboarding.StartRoute
+import com.konkuk.hackathon_team3.presentation.minseok.feed.FeedRoute
 import com.konkuk.hackathon_team3.presentation.minseok.home.MainRoute
 import com.konkuk.hackathon_team3.presentation.minseok.ranking.RankingRoute
 import com.konkuk.hackathon_team3.presentation.minseok.writing.GasWritingRoute
@@ -69,7 +70,9 @@ fun MainNavHost(
                     navigateToGasWriting = { navController.navigateToGasWriting() },
                     navigateToCalendar = { navController.navigateToCalendar() },
                     navigateToAddFamily = { navController.navigateToAddFamily() },
-                    navigateToAlarm = { navController.navigateToAlarm() }
+                    navigateToAlarm = { navController.navigateToAlarm() },
+                    navigateToFeed = { navController.navigateToFeed() }
+
                 )
             }
 
@@ -95,6 +98,10 @@ fun MainNavHost(
 
             composable(route = "alarm") {
                 AlarmRoute()
+            }
+
+            composable(route = "feed") {
+                FeedRoute()
             }
         }
     }

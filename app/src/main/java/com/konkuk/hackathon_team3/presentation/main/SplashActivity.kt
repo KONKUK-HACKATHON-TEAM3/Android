@@ -154,7 +154,7 @@ private fun SplashScreen(
 
     LaunchedEffect(composition) {
         if (composition != null) {
-            delay(7_000)
+            delay(3_500)
             onFinish()
         }
     }
