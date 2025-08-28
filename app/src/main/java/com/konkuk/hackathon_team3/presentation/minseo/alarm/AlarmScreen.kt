@@ -64,7 +64,6 @@ fun AlarmScreen(
     ) {
         GasTopbar(
             backButtonClicked = popBackStack,
-            modifier = Modifier.padding(vertical = 10.dp)
         )
 
         LazyColumn(
