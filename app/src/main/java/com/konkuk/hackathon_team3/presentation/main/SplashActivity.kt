@@ -8,7 +8,6 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.ContentResolver
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.media.AudioAttributes
@@ -78,7 +77,7 @@ class SplashActivity() : ComponentActivity() {
 
     // 채널 생성
     private fun createNotificationChannel() {
-        val nm = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val nm = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         val channelId = "channel_gas_v1"
 
         if (nm.getNotificationChannel(channelId) == null) {
@@ -124,13 +123,13 @@ class SplashActivity() : ComponentActivity() {
             this, 0, intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
-        val am = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val am = getSystemService(ALARM_SERVICE) as AlarmManager
         am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, timeInMillis, pi)
     }
 
     // 정확한 알림 권한 확인
     private fun isExactAlarmPermissionGranted(): Boolean {
-        val am = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val am = getSystemService(ALARM_SERVICE) as AlarmManager
         return am.canScheduleExactAlarms()
     }
 }

@@ -20,12 +20,15 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.konkuk.hackathon_team3.R
 import com.konkuk.hackathon_team3.presentation.main.GasTopbar
 import com.konkuk.hackathon_team3.presentation.minseok.RankingItem
 import com.konkuk.hackathon_team3.presentation.util.gasComponentDesign
 import com.konkuk.hackathon_team3.ui.theme.KONKUKHACKATHONTEAM3Theme
+import com.konkuk.hackathon_team3.ui.theme.boldStyle
+import com.konkuk.hackathon_team3.ui.theme.regularStyle
 
 @Composable
 fun RankingRoute(
@@ -60,7 +63,9 @@ fun RankingScreen(
                 .padding(vertical = 24.dp, horizontal = 21.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "이번주 경품")
+            Text(text = "이번주 경품",
+                fontSize = 14.sp,
+                style = KONKUKHACKATHONTEAM3Theme.typography.boldStyle)
             Spacer(modifier = Modifier.height(19.dp))
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                 Icon(
@@ -70,7 +75,9 @@ fun RankingScreen(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
 
-                Text(text = uiState.price)
+                Text(text = uiState.price,
+                    fontSize = 12.sp,
+                    style = KONKUKHACKATHONTEAM3Theme.typography.boldStyle)
             }
         }
         Spacer(modifier = Modifier.height(12.dp))
@@ -80,8 +87,14 @@ fun RankingScreen(
                 .padding(vertical = 24.dp, horizontal = 21.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "이번주 순위")
-            Text(text = "2025.08.25 ~ 2025.08.31")
+            Text(text = "이번주 순위",
+                fontSize = 14.sp,
+                style = KONKUKHACKATHONTEAM3Theme.typography.boldStyle)
+            Text(text = "2025.08.25 ~ 2025.08.31",
+                fontSize = 9.sp,
+                style = KONKUKHACKATHONTEAM3Theme.typography.regularStyle)
+            Spacer(modifier = Modifier.height(24.dp))
+
             Column(
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {

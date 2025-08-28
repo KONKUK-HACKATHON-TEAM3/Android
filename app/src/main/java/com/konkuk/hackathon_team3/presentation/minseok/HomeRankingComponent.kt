@@ -35,6 +35,7 @@ import com.konkuk.hackathon_team3.presentation.model.RankingData
 import com.konkuk.hackathon_team3.presentation.util.noRippleClickable
 import com.konkuk.hackathon_team3.ui.theme.KONKUKHACKATHONTEAM3Theme
 import com.konkuk.hackathon_team3.ui.theme.boldStyle
+import com.konkuk.hackathon_team3.ui.theme.regularStyle
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -111,7 +112,7 @@ fun RankingItem(modifier: Modifier = Modifier, rankingData: RankingData) {
             text = "${rankingData.point}점",
             color = Color.Black,
             fontSize = 9.sp,
-            style = KONKUKHACKATHONTEAM3Theme.typography.boldStyle
+            style = KONKUKHACKATHONTEAM3Theme.typography.regularStyle
         )
     }
 }
