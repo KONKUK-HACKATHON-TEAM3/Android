@@ -1,12 +1,14 @@
 package com.konkuk.hackathon_team3.presentation.util
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,6 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.focus.FocusManager
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
@@ -87,3 +90,20 @@ fun Modifier.advancedImePadding() =
             )
             .imePadding()
     }
+
+fun Modifier.gasComponentDesign(): Modifier {
+    return this
+        .fillMaxWidth()
+        .padding(horizontal = 16.dp)
+        .border(width = 2.dp, color = Color.White.copy(alpha = 0.2f), shape = RoundedCornerShape(16.dp))
+        .background(
+            brush = Brush.verticalGradient(
+                colors = listOf(
+                    Color.White.copy(alpha = 0.2f),
+                    Color.White.copy(alpha = 0f)
+                )
+            ),
+            shape = RoundedCornerShape(16.dp)
+        )
+        .background(color = Color.White.copy(alpha = 0.2f), shape = RoundedCornerShape(16.dp))
+}

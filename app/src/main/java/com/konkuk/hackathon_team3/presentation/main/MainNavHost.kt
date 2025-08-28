@@ -10,8 +10,7 @@ import androidx.navigation.compose.composable
 import com.konkuk.hackathon_team3.presentation.minseo.addfamily.AddFamilyRoute
 import com.konkuk.hackathon_team3.presentation.minseo.alarm.AlarmRoute
 import com.konkuk.hackathon_team3.presentation.minseo.calendar.GasCalendarRoute
-import com.konkuk.hackathon_team3.presentation.minseo.ranking.RankingRoute
-import com.konkuk.hackathon_team3.presentation.minseok.GasWritingRoute
+import com.konkuk.hackathon_team3.presentation.minseok.home.MainRoute
 import com.konkuk.hackathon_team3.presentation.minseok.ranking.RankingRoute
 import com.konkuk.hackathon_team3.presentation.minseok.writing.GasWritingRoute
 

@@ -1,16 +1,13 @@
 package com.konkuk.hackathon_team3.presentation.minseok.ranking
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,7 +24,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.konkuk.hackathon_team3.R
 import com.konkuk.hackathon_team3.presentation.main.GasTopbar
 import com.konkuk.hackathon_team3.presentation.minseok.RankingItem
-import com.konkuk.hackathon_team3.presentation.util.roundedBackgroundWithPadding
+import com.konkuk.hackathon_team3.presentation.util.gasComponentDesign
 import com.konkuk.hackathon_team3.ui.theme.KONKUKHACKATHONTEAM3Theme
 
 @Composable
@@ -51,7 +48,7 @@ fun RankingScreen(
     navigateToRecordWrite: () -> Unit,
     modifier: Modifier = Modifier,
     uiState: RankingUiState = RankingUiState()
-    ) {
+) {
     Column(modifier = modifier) {
         GasTopbar(
             backButtonClicked = {}
@@ -59,13 +56,8 @@ fun RankingScreen(
         Spacer(modifier = Modifier.height(11.dp))
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .border(width = 1.dp, color = Color(0xFF997C90), shape = RoundedCornerShape(16.dp))
-                .roundedBackgroundWithPadding(
-                    padding = PaddingValues(vertical = 24.dp, horizontal = 21.dp),
-                    cornerRadius = 16.dp
-                ),
+                .gasComponentDesign()
+                .padding(vertical = 24.dp, horizontal = 21.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(text = "이번주 경품")
@@ -84,13 +76,8 @@ fun RankingScreen(
         Spacer(modifier = Modifier.height(12.dp))
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .border(width = 1.dp, color = Color(0xFF997C90), shape = RoundedCornerShape(16.dp))
-                .roundedBackgroundWithPadding(
-                    padding = PaddingValues(vertical = 24.dp, horizontal = 21.dp),
-                    cornerRadius = 16.dp
-                ),
+                .gasComponentDesign()
+                .padding(vertical = 24.dp, horizontal = 21.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(text = "이번주 순위")

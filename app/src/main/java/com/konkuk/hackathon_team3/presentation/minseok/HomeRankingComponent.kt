@@ -9,10 +9,8 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.with
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -36,7 +34,6 @@ import androidx.compose.ui.unit.sp
 import com.konkuk.hackathon_team3.R
 import com.konkuk.hackathon_team3.presentation.model.RankingData
 import com.konkuk.hackathon_team3.presentation.util.noRippleClickable
-import com.konkuk.hackathon_team3.presentation.util.roundedBackgroundWithPadding
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -57,12 +54,6 @@ fun HomeRankingComponent(
 
     Column(
         modifier = modifier
-            .fillMaxWidth()
-            .roundedBackgroundWithPadding(
-                backgroundColor = Color.White,
-                cornerRadius = 16.dp,
-                padding = PaddingValues(vertical = 24.dp, horizontal = 20.dp)
-            )
             .noRippleClickable(onClick = navigateToRanking),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -73,7 +64,8 @@ fun HomeRankingComponent(
         )
         Spacer(modifier = Modifier.height(20.dp))
 
-        Row(modifier = Modifier
+        Row(
+            modifier = Modifier
                 .clipToBounds()
         ) {
             Box(Modifier.weight(1f)) {

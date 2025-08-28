@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.rememberNavController
 import com.konkuk.hackathon_team3.ui.theme.KONKUKHACKATHONTEAM3Theme
@@ -26,7 +27,14 @@ class MainActivity : ComponentActivity() {
                         navController = navController,
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(color = Color.White)
+                            .background(
+                                brush = Brush.verticalGradient(
+                                    colors = listOf(
+                                        Color(0xFFFFFDEA),
+                                        Color(0xFFF1D5C9)
+                                    )
+                                )
+                            )
                             .padding(innerPadding)
                     )
                 }
