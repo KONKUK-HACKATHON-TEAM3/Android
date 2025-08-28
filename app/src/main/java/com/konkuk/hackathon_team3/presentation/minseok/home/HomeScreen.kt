@@ -67,7 +67,6 @@ fun HomerScreen(
     navigateToAlarm: () -> Unit,
     modifier: Modifier = Modifier,
     uiState: HomeUiState = HomeUiState()
-
 ) {
     LazyColumn(modifier = modifier) {
         item {
