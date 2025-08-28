@@ -161,6 +161,7 @@ fun HomerScreen(
 
         item {
             HomeAddFamilyComponent(
+                onClick = navigateToAddFamily,
                 familyList = uiState.familyList
             )
             Spacer(modifier = Modifier.height(50.dp))
