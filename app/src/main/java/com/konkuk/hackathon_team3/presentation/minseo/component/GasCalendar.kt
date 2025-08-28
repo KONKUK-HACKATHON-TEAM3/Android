@@ -79,6 +79,7 @@ fun GasCalendar(
     Column(
         modifier = modifier
             .gasComponentDesign()
+            .padding(vertical = 24.dp)
             .fillMaxWidth()
     ) {
         Row(
@@ -122,9 +123,10 @@ fun GasCalendar(
                 Box(Modifier.size(36.dp), contentAlignment = Alignment.Center) {
                     Text(
                         text = it.description,
-                        color = Color(0xFFBDBDBD),
+                        color = Color.Black,
                         fontSize = 12.sp,
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
+                        style = KONKUKHACKATHONTEAM3Theme.typography.boldStyle
                     )
                 }
             }
@@ -147,7 +149,7 @@ fun GasCalendar(
                             modifier = Modifier
                                 .size(36.dp)
                                 .clip(CircleShape)
-                                .background(if (isSelected) Color(0xFFFF6E00) else Color.Transparent)
+                                .background(if (isSelected) Color(0xFFFF8514) else Color.Transparent)
                                 .noRippleClickable {
                                     selected = date
                                     onDateClicked(date)
@@ -159,7 +161,7 @@ fun GasCalendar(
                                     isSelected -> Color.White
                                     !inMonth -> Color(0xFF777777)
                                     isToday -> Color(0xFFFF6E00)
-                                    else -> Color.White
+                                    else -> Color.Black
                                 },
                                 fontSize = 13.sp,
                                 style = if (isSelected) KONKUKHACKATHONTEAM3Theme.typography.boldStyle else KONKUKHACKATHONTEAM3Theme.typography.regularStyle
@@ -176,7 +178,7 @@ fun GasCalendar(
 @Composable
 fun GasHomeCalendar(
     modifier: Modifier = Modifier,
-    navigateToCalendar:() -> Unit
+    navigateToCalendar: () -> Unit
 ) {
     val today = LocalDate.now()
     var selected by remember { mutableStateOf(today) }

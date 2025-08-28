@@ -1,6 +1,7 @@
 package com.konkuk.hackathon_team3.presentation.main
 
 import androidx.navigation.NavController
+import java.time.LocalDate
 
 fun NavController.navigateToOnBoardingEnterCode(){
     navigate("enterCode"){
@@ -65,8 +66,8 @@ fun NavController.navigateToAlarm() {
     }
 }
 
-fun NavController.navigateToFeed() {
-    navigate("feed") {
+fun NavController.navigateToFeed(date: LocalDate) {
+    navigate("feed/${date}") {
         launchSingleTop = true
         popUpTo("feed") { inclusive = true }
     }
