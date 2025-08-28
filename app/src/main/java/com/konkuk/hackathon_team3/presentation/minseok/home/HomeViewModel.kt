@@ -105,7 +105,7 @@ class HomeViewModel : ViewModel() {
         loadHome()
     }
 
-    fun loadHome(memberId: Long = 1) {
+    fun loadHome(memberId: Long = 2) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
 

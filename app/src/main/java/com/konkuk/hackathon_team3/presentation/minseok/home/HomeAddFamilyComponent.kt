@@ -43,6 +43,7 @@ fun HomeAddFamilyComponent(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(text = "가족", style = KONKUKHACKATHONTEAM3Theme.typography.boldStyle, fontSize = 14.sp)
+        Spacer(Modifier.height(20.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
@@ -54,7 +55,9 @@ fun HomeAddFamilyComponent(
                 items(
                     items = familyList
                 ) {
-                    Column {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ){
                         Text(
                             text = it.nickname,
                             style = KONKUKHACKATHONTEAM3Theme.typography.regularStyle,

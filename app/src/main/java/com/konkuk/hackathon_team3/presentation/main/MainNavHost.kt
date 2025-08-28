@@ -73,8 +73,9 @@ fun MainNavHost(
                     navigateToCalendar = { navController.navigateToCalendar() },
                     navigateToAddFamily = { navController.navigateToAddFamily() },
                     navigateToAlarm = { navController.navigateToAlarm() },
-                    navigateToFeed = { }
-
+                    navigateToFeed = { date ->
+                        navController.navigateToFeed(date)
+                    }
                 )
             }
 

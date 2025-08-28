@@ -49,6 +49,7 @@ import com.konkuk.hackathon_team3.presentation.util.noRippleClickable
 import com.konkuk.hackathon_team3.ui.theme.KONKUKHACKATHONTEAM3Theme
 import com.konkuk.hackathon_team3.ui.theme.boldStyle
 import com.konkuk.hackathon_team3.ui.theme.regularStyle
+import java.time.LocalDate
 
 @Composable
 fun MainRoute(
@@ -57,7 +58,7 @@ fun MainRoute(
     navigateToAddFamily: () -> Unit,
     navigateToCalendar: () -> Unit,
     navigateToAlarm: () -> Unit,
-    navigateToFeed: () -> Unit,
+    navigateToFeed: (LocalDate) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = viewModel()
 ) {
@@ -85,7 +86,7 @@ fun HomerScreen(
     navigateToCalendar: () -> Unit,
     navigateToAddFamily: () -> Unit,
     navigateToAlarm: () -> Unit,
-    navigateToFeed: () -> Unit,
+    navigateToFeed: (LocalDate) -> Unit,
     modifier: Modifier = Modifier,
     uiState: HomeUiState = HomeUiState(),
     isRefreshing: Boolean = false,
@@ -98,7 +99,7 @@ fun HomerScreen(
             modifier = Modifier.fillMaxSize()
         ) {
             Column(modifier = Modifier.fillMaxSize()) {
-                Row (modifier = Modifier.padding(top=86.dp)){
+                Row(modifier = Modifier.padding(top = 86.dp)) {
                     Spacer(modifier = Modifier.weight(1f))
                     Icon(
                         imageVector = ImageVector.vectorResource(R.drawable.ic_super_big_gas),
@@ -108,7 +109,7 @@ fun HomerScreen(
                 }
                 Spacer(modifier = Modifier.weight(1f))
                 Icon(
-                    modifier= Modifier
+                    modifier = Modifier
                         .padding(start = 36.dp)
                         .blur(radius = 6.dp),
                     imageVector = ImageVector.vectorResource(R.drawable.ic_blur_circle),
@@ -117,7 +118,7 @@ fun HomerScreen(
                 )
 
                 Icon(
-                    modifier= Modifier
+                    modifier = Modifier
                         .padding(bottom = 45.dp)
                         .blur(radius = 8.dp),
                     imageVector = ImageVector.vectorResource(R.drawable.ic_blur_gas),
@@ -157,7 +158,7 @@ fun HomerScreen(
                     Column(
                         modifier = Modifier
                             .gasComponentDesign()
-                            .noRippleClickable(navigateToFeed)
+                            .noRippleClickable { navigateToFeed(LocalDate.now()) }
                             .padding(vertical = 24.dp, horizontal = 28.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
