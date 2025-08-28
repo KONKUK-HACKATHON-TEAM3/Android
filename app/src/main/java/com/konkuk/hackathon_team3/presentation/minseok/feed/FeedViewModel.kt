@@ -2,7 +2,6 @@ package com.konkuk.hackathon_team3.presentation.minseok.feed
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.konkuk.hackathon_team3.data.service.ServicePool
 import androidx.lifecycle.viewModelScope
 import com.konkuk.hackathon_team3.data.mapper.toFeedData
 import com.konkuk.hackathon_team3.data.service.ServicePool

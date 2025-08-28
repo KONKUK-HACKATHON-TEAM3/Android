@@ -3,8 +3,11 @@ package com.konkuk.hackathon_team3.presentation.minseok.home
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Icon
@@ -17,10 +20,15 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.konkuk.hackathon_team3.R
 import com.konkuk.hackathon_team3.presentation.model.HomeFamilyData
+import com.konkuk.hackathon_team3.presentation.model.ProfileType
 import com.konkuk.hackathon_team3.presentation.util.gasComponentDesign
 import com.konkuk.hackathon_team3.presentation.util.noRippleClickable
+import com.konkuk.hackathon_team3.ui.theme.KONKUKHACKATHONTEAM3Theme
+import com.konkuk.hackathon_team3.ui.theme.boldStyle
+import com.konkuk.hackathon_team3.ui.theme.regularStyle
 
 @Composable
 fun HomeAddFamilyComponent(
@@ -34,7 +42,7 @@ fun HomeAddFamilyComponent(
             .padding(vertical = 24.dp, horizontal = 20.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "가족")
+        Text(text = "가족", style = KONKUKHACKATHONTEAM3Theme.typography.boldStyle, fontSize = 14.sp)
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
@@ -47,8 +55,18 @@ fun HomeAddFamilyComponent(
                     items = familyList
                 ) {
                     Column {
-                        Text(text = it.nickname)
-                        Text(text = it.profileEnum)
+                        Text(
+                            text = it.nickname,
+                            style = KONKUKHACKATHONTEAM3Theme.typography.regularStyle,
+                            fontSize = 9.sp
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Icon(
+                            imageVector = ImageVector.vectorResource(it.profileEnum.profileImage),
+                            contentDescription = null,
+                            tint = Color.Unspecified,
+                            modifier = Modifier.size(40.dp)
+                        )
                     }
                 }
             }
@@ -71,39 +89,39 @@ private fun HomeAddFamilyComponentPreview() {
         familyList = listOf(
             HomeFamilyData(
                 nickname = "신민석",
-                profileEnum = "이넘입니다"
+                profileEnum = ProfileType.MOTHER
             ),
             HomeFamilyData(
                 nickname = "신민석",
-                profileEnum = "이넘입니다"
+                profileEnum = ProfileType.MOTHER
             ),
             HomeFamilyData(
                 nickname = "신민석",
-                profileEnum = "이넘입니다"
+                profileEnum = ProfileType.MOTHER
             ),
             HomeFamilyData(
                 nickname = "신민석",
-                profileEnum = "이넘입니다"
+                profileEnum = ProfileType.MOTHER
             ),
             HomeFamilyData(
                 nickname = "신민석",
-                profileEnum = "이넘입니다"
+                profileEnum = ProfileType.MOTHER
             ),
             HomeFamilyData(
                 nickname = "신민석",
-                profileEnum = "이넘입니다"
+                profileEnum = ProfileType.MOTHER
             ),
             HomeFamilyData(
                 nickname = "신민석",
-                profileEnum = "이넘입니다"
+                profileEnum = ProfileType.MOTHER
             ),
             HomeFamilyData(
                 nickname = "신민석",
-                profileEnum = "이넘입니다"
+                profileEnum = ProfileType.MOTHER
             ),
             HomeFamilyData(
                 nickname = "신민석",
-                profileEnum = "이넘입니다"
+                profileEnum = ProfileType.MOTHER
             ),
         ),
         onClick = {}

@@ -45,7 +45,7 @@ fun DailyMissionDto.toMissionData(): MissionData =
 fun FamilyMemberDto.toHomeFamilyData(): HomeFamilyData =
     HomeFamilyData(
         nickname = nickname,
-        profileEnum = profile
+        profileEnum = ProfileType.valueOf(profile)
     )
 
 // FamilyStoryDto -> HomeRecentFeedData
