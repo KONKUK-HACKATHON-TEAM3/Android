@@ -9,6 +9,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.konkuk.hackathon_team3.presentation.minseo.addfamily.AddFamilyRoute
+import com.konkuk.hackathon_team3.presentation.minseo.calendar.GasCalendarRoute
 import com.konkuk.hackathon_team3.presentation.minseo.ranking.RankingRoute
 import com.konkuk.hackathon_team3.presentation.minseok.GasWritingRoute
 
@@ -18,7 +20,9 @@ fun MainNavHost(
     modifier: Modifier = Modifier
 ) {
     Box(
-        modifier = modifier.fillMaxSize().background(color = Color.White)
+        modifier = modifier
+            .fillMaxSize()
+            .background(color = Color.White)
     ) {
         NavHost(
             navController = navController,
@@ -28,7 +32,9 @@ fun MainNavHost(
             composable(route = "main") {
                 MainRoute(
                     navigateToRanking = { navController.navigateToRanking() },
-                    navigateToGasWriting = { navController.navigateToGasWriting() }
+                    navigateToGasWriting = { navController.navigateToGasWriting() },
+                    navigateToCalendar = { navController.navigateToCalendar() },
+                    navigateToAddFamily = { navController.navigateToAddFamily() }
                 )
             }
 
@@ -43,6 +49,15 @@ fun MainNavHost(
                     navigateToRanking = { navController.navigateToRanking() }
                 )
             }
+
+            composable(route = "calendar") {
+                GasCalendarRoute()
+            }
+
+            composable(route = "addFamily") {
+                AddFamilyRoute()
+            }
+
         }
     }
 }
