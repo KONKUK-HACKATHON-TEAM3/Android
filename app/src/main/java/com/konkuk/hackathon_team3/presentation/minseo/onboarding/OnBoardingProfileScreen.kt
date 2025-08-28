@@ -2,6 +2,7 @@ package com.konkuk.hackathon_team3.presentation.minseo.onboarding
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -18,6 +19,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -192,6 +194,11 @@ fun OnBoardingProfileScreen(
             modifier = Modifier
                 .noRippleClickable(navigateToHome)
                 .padding(horizontal = 16.dp)
+                .border(
+                    width = 2.dp,
+                    color = Color.White.copy(alpha = 0.5f),
+                    shape = RoundedCornerShape(12.dp)
+                )
                 .roundedBackgroundWithPadding(
                     backgroundBrush = AppGradients.Orange,
                     cornerRadius = 12.dp,

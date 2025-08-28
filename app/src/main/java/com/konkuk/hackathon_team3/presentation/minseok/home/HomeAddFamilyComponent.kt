@@ -20,9 +20,14 @@ import androidx.compose.ui.unit.dp
 import com.konkuk.hackathon_team3.R
 import com.konkuk.hackathon_team3.presentation.model.HomeFamilyData
 import com.konkuk.hackathon_team3.presentation.util.gasComponentDesign
+import com.konkuk.hackathon_team3.presentation.util.noRippleClickable
 
 @Composable
-fun HomeAddFamilyComponent(familyList: List<HomeFamilyData>, modifier: Modifier = Modifier) {
+fun HomeAddFamilyComponent(
+    onClick: () -> Unit,
+    familyList: List<HomeFamilyData>,
+    modifier: Modifier = Modifier
+) {
     Column(
         modifier = modifier
             .gasComponentDesign()
@@ -48,10 +53,12 @@ fun HomeAddFamilyComponent(familyList: List<HomeFamilyData>, modifier: Modifier 
                 }
             }
             Icon(
-                modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 16.dp),
-                imageVector = ImageVector.vectorResource(
-                    R.drawable.ic_plus
-                ), contentDescription = null, tint = Color.Unspecified
+                modifier = Modifier
+                    .noRippleClickable(onClick)
+                    .padding(start = 16.dp, top = 16.dp, bottom = 16.dp),
+                imageVector = ImageVector.vectorResource(R.drawable.ic_plus),
+                contentDescription = null,
+                tint = Color.Unspecified
             )
         }
     }
@@ -98,6 +105,7 @@ private fun HomeAddFamilyComponentPreview() {
                 nickname = "신민석",
                 profileEnum = "이넘입니다"
             ),
-        )
+        ),
+        onClick = {}
     )
 }

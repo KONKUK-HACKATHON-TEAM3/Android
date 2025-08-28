@@ -82,6 +82,7 @@ fun HomerScreen(
             item {
                 GasTopbar(
                     isHomeScreen = true,
+                    navigateToNotification = navigateToAlarm
                 )
             }
 
@@ -170,6 +171,7 @@ fun HomerScreen(
 
             item {
                 HomeAddFamilyComponent(
+                    onClick = navigateToAddFamily,
                     familyList = uiState.familyList
                 )
                 Spacer(modifier = Modifier.height(50.dp))
