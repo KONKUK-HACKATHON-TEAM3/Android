@@ -65,7 +65,7 @@ class SplashActivity() : ComponentActivity() {
             if (!hasPost) {
                 requestNotifications.launch(Manifest.permission.POST_NOTIFICATIONS)
             } else {
-                scheduleNotificationAfter(10)
+//                scheduleNotificationAfter(10)
             }
         }
 

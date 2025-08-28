@@ -3,21 +3,21 @@ package com.konkuk.hackathon_team3.presentation.main
 import androidx.navigation.NavController
 
 fun NavController.navigateToOnBoardingEnterCode(){
-    navigate("EnterCode"){
+    navigate("enterCode"){
         launchSingleTop = true
         popUpTo("onBoarding") { inclusive = true }
     }
 }
 
 fun NavController.navigateToOnBoardingEnterNickname() {
-    navigate("EnterNickname") {
+    navigate("enterNickname") {
         launchSingleTop = true
         popUpTo("onBoarding") { inclusive = true }
     }
 }
 
 fun NavController.navigateToOnBoardingEnterProfile() {
-    navigate("EnterProfile") {
+    navigate("enterProfile") {
         launchSingleTop = true
         popUpTo("onBoarding") { inclusive = true }
     }
@@ -31,7 +31,7 @@ fun NavController.navigateToHome() {
 }
 
 fun NavController.navigateToRanking() {
-    navigate("Ranking") {
+    navigate("ranking") {
         launchSingleTop = true
         popUpTo("Ranking") { inclusive = true }
     }

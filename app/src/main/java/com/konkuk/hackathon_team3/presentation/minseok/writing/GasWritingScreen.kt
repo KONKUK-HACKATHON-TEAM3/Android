@@ -1,4 +1,4 @@
-package com.konkuk.hackathon_team3.presentation.minseok
+package com.konkuk.hackathon_team3.presentation.minseok.writing
 
 import android.Manifest
 import android.content.Context
@@ -10,18 +10,11 @@ import android.os.Environment
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -48,6 +41,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
@@ -58,22 +52,27 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieClipSpec
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.rememberLottieAnimatable
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.konkuk.hackathon_team3.R
 import com.konkuk.hackathon_team3.presentation.main.GasTopbar
+import com.konkuk.hackathon_team3.presentation.util.gasComponentDesign
 import com.konkuk.hackathon_team3.presentation.util.noRippleClickable
 import com.konkuk.hackathon_team3.presentation.util.pressedEffectClickable
 import com.konkuk.hackathon_team3.presentation.util.roundedBackgroundWithPadding
 import com.konkuk.hackathon_team3.ui.theme.KONKUKHACKATHONTEAM3Theme
 import java.io.File
 import java.io.FileOutputStream
-import kotlin.math.sin
 
 
 @Composable
@@ -166,7 +165,7 @@ fun GasWritingRoute(
         },
         onTextChange = viewModel::updateTextContent,
         onClearError = viewModel::clearError,
-        onUploadButtonClicked= navigateToRanking,
+        onUploadButtonClicked = navigateToRanking,
         modifier = modifier
     )
 }
@@ -201,7 +200,7 @@ fun GasWritingScreen(
     onRecordingToggle: () -> Unit,
     onTextChange: (String) -> Unit,
     onClearError: () -> Unit,
-    onUploadButtonClicked:()->Unit,
+    onUploadButtonClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val focusRequester: FocusRequester = remember { FocusRequester() }
@@ -217,8 +216,11 @@ fun GasWritingScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
-                .border(width = 1.dp, color = Color(0xFF997C70), shape = RoundedCornerShape(16.dp))
-                .roundedBackgroundWithPadding(backgroundColor = Color(0xFFCCCCCC), cornerRadius = 16.dp)
+                .border(width = 2.dp, color = Color.White.copy(alpha = 0.5f), shape = RoundedCornerShape(16.dp))
+                .roundedBackgroundWithPadding(
+                    backgroundColor = Color(0xFFCCCCCC).copy(alpha = 0.2f),
+                    cornerRadius = 16.dp
+                )
                 .clickable { onImageClick() }
                 .aspectRatio(1f), contentAlignment = Alignment.Center
         ) {
@@ -231,7 +233,8 @@ fun GasWritingScreen(
                     contentDescription = "촬영된 이미지",
                     modifier = Modifier
                         .fillMaxSize()
-                        .clip(RoundedCornerShape(8.dp)),
+                        .clip(RoundedCornerShape(16.dp))
+                        .rotate(90f),
                     contentScale = ContentScale.Crop
                 )
             } else {
@@ -261,30 +264,26 @@ fun GasWritingScreen(
 
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .border(width = 1.dp, color = Color(0xFF997C90), shape = RoundedCornerShape(16.dp))
-                .padding(vertical = 20.dp, horizontal = 21.dp), horizontalAlignment = Alignment.CenterHorizontally
+                .gasComponentDesign()
+                .padding(vertical = 20.dp, horizontal = 21.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Box(
                 modifier = Modifier
-                    .noRippleClickable(onRecordingToggle)
-                    .height(24.dp)
+                    .size(50.dp)
+                    .noRippleClickable(onRecordingToggle),
+                contentAlignment = Alignment.Center
             ) {
+
                 if (uiState.isRecording) {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(4.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        RecordingAnimation()
-                    }
+                    RecordingAnimation()
                 } else {
                     Icon(
                         imageVector = ImageVector.vectorResource(R.drawable.ic_mic),
                         contentDescription = null,
                         tint = Color.Unspecified,
-                        modifier = Modifier.padding(4.dp)
                     )
+
                 }
             }
             Spacer(modifier = Modifier.height(19.dp))
@@ -328,11 +327,8 @@ fun GasWritingScreen(
         Spacer(modifier = Modifier.weight(1f))
         Text(
             text = "저장하기",
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .border(width = 1.dp, color = Color(0xFF997C90), shape = RoundedCornerShape(16.dp))
-                .roundedBackgroundWithPadding(cornerRadius = 16.dp, padding = PaddingValues(16.dp))
+            modifier = Modifier.gasComponentDesign()
+                .padding(16.dp)
                 .pressedEffectClickable(onUploadButtonClicked),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.titleSmall,
@@ -370,52 +366,33 @@ fun GasWritingScreen(
 
 @Composable
 fun RecordingAnimation() {
-    val transition = rememberInfiniteTransition()
+    val composition by rememberLottieComposition(
+        LottieCompositionSpec.Asset("Recording.json")
+    )
+    val lottieAnimatable = rememberLottieAnimatable()
 
-    val wavePhase by transition.animateFloat(
-        initialValue = 0f,
-        targetValue = 2 * Math.PI.toFloat(),
-        animationSpec = infiniteRepeatable(
-            animation = tween(1200, easing = LinearEasing),
-            repeatMode = RepeatMode.Restart
+    LaunchedEffect(composition) {
+        lottieAnimatable.animate(
+            composition = composition,
+            clipSpec = LottieClipSpec.Frame(0, 1200),
+            initialProgress = 0f,
+            iteration = LottieConstants.IterateForever
         )
-    )
-
-    Row(
-        horizontalArrangement = Arrangement.spacedBy(3.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        repeat(4) { index ->
-            val phaseOffset = index * (Math.PI.toFloat() / 2)
-            val currentPhase = wavePhase + phaseOffset
-
-            val normalizedValue = (sin(currentPhase.toDouble()) + 1) / 2
-
-            val minHeight = if (index == 0 || index == 3) 8.dp else 12.dp
-            val maxHeight = if (index == 0 || index == 3) 16.dp else 28.dp
-
-            val currentHeight = minHeight + (maxHeight - minHeight) * normalizedValue.toFloat()
-
-            Box(
-                modifier = Modifier.height(32.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                RecordingBar(height = currentHeight)
-            }
-        }
     }
-}
 
-@Composable
-fun RecordingBar(height: Dp) {
-    Spacer(
-        modifier = Modifier
-            .size(width = 3.dp, height = height)
-            .roundedBackgroundWithPadding(
-                backgroundColor = Color(0xFF997C90),
-                cornerRadius = 1.5.dp
-            )
-    )
+    Box(
+        modifier = Modifier.size(50.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        LottieAnimation(
+            composition = composition,
+            iterations = LottieConstants.IterateForever,
+            modifier = Modifier
+                .fillMaxSize()
+                .align(Alignment.BottomCenter),
+            contentScale = ContentScale.FillWidth
+        )
+    }
 }
 
 

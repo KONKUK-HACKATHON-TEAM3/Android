@@ -14,6 +14,7 @@ appcompat = "1.7.0"
 coil = "2.4.0"
 
 #Third Party
+lottieCompose = "6.4.0"
 naverspeechNcpSdk = "1.1.4"
 naverspeechNcpSdkAndroid = "1.1.8"
 okhttp = "4.11.0"
@@ -43,6 +44,7 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 coil-base = { group = "io.coil-kt", name = "coil", version.ref = "coil" }
 # Third Party
+lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottieCompose" }
 naverspeech-ncp-sdk = { module = "com.naver.speech.client:naverspeech-ncp-sdk", version.ref = "naverspeechNcpSdk" }
 naverspeech-ncp-sdk-android = { module = "com.naver.speech.clientapi:naverspeech-ncp-sdk-android", version.ref = "naverspeechNcpSdkAndroid" }
 okhttp-bom = { group = "com.squareup.okhttp3", name = "okhttp-bom", version.ref = "okhttp" }

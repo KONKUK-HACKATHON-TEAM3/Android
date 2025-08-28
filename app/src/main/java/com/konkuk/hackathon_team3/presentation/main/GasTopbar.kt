@@ -20,8 +20,8 @@ import com.konkuk.hackathon_team3.presentation.util.noRippleClickable
 
 @Composable
 fun GasTopbar(
-    backButtonClicked: () -> Unit,
     modifier: Modifier = Modifier,
+    backButtonClicked: () -> Unit={},
     isHomeScreen: Boolean = false,
     navigateToNotification: () -> Unit = {}
 ) {
@@ -29,15 +29,17 @@ fun GasTopbar(
         modifier = modifier
             .fillMaxWidth()
     ) {
-        Icon(
-            imageVector = ImageVector.vectorResource(R.drawable.ic_back_arrow),
-            contentDescription = null,
-            tint = Color.Unspecified,
-            modifier = Modifier
-                .padding(16.dp)
-                .align(Alignment.CenterStart)
-                .noRippleClickable(backButtonClicked),
-        )
+        if (!isHomeScreen){
+            Icon(
+                imageVector = ImageVector.vectorResource(R.drawable.ic_back_arrow),
+                contentDescription = null,
+                tint = Color.Unspecified,
+                modifier = Modifier
+                    .padding(16.dp)
+                    .align(Alignment.CenterStart)
+                    .noRippleClickable(backButtonClicked),
+            )
+        }
         Icon(
             imageVector = ImageVector.vectorResource(R.drawable.ic_app_logo),
             contentDescription = null,

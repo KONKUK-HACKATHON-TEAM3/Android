@@ -1,4 +1,4 @@
-package com.konkuk.hackathon_team3.presentation.minseok
+package com.konkuk.hackathon_team3.presentation.minseok.writing
 
 import android.Manifest
 import android.content.Context

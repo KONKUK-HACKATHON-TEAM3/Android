@@ -1,11 +1,9 @@
 package com.konkuk.hackathon_team3.presentation.main
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -18,8 +16,9 @@ import com.konkuk.hackathon_team3.presentation.minseo.onboarding.OnBoardingEnter
 import com.konkuk.hackathon_team3.presentation.minseo.onboarding.OnBoardingProfileRoute
 import com.konkuk.hackathon_team3.presentation.minseo.onboarding.OnBoardingViewModel
 import com.konkuk.hackathon_team3.presentation.minseo.onboarding.StartRoute
-import com.konkuk.hackathon_team3.presentation.minseo.ranking.RankingRoute
-import com.konkuk.hackathon_team3.presentation.minseok.GasWritingRoute
+import com.konkuk.hackathon_team3.presentation.minseok.home.MainRoute
+import com.konkuk.hackathon_team3.presentation.minseok.ranking.RankingRoute
+import com.konkuk.hackathon_team3.presentation.minseok.writing.GasWritingRoute
 
 @Composable
 fun MainNavHost(
@@ -27,9 +26,7 @@ fun MainNavHost(
     modifier: Modifier = Modifier
 ) {
     Box(
-        modifier = modifier
-            .fillMaxSize()
-            .background(color = Color.White)
+        modifier = modifier.fillMaxSize()
     ) {
         val onBoardingViewModel: OnBoardingViewModel = viewModel()
 
@@ -45,21 +42,21 @@ fun MainNavHost(
                 )
             }
 
-            composable(route = "EnterCode") {
+            composable(route = "enterCode") {
                 OnBoardingEnterCodeRoute(
                     navigateToOnBoardingEnterNickname = { navController.navigateToOnBoardingEnterNickname() },
                     viewModel = onBoardingViewModel
                 )
             }
 
-            composable(route = "EnterNickname") {
+            composable(route = "enterNickname") {
                 OnBoardingEnterNickNameRoute(
                     navigateToOnBoardingEnterProfile = { navController.navigateToOnBoardingEnterProfile() },
                     viewModel = onBoardingViewModel
                 )
             }
 
-            composable(route = "EnterProfile") {
+            composable(route = "enterProfile") {
                 OnBoardingProfileRoute(
                     navigateToHome = { navController.navigateToHome() },
                     viewModel = onBoardingViewModel
@@ -76,7 +73,7 @@ fun MainNavHost(
                 )
             }
 
-            composable(route = "Ranking") {
+            composable(route = "ranking") {
                 RankingRoute(
                     navigateToRecordWrite = { navController.navigateToGasWriting() }
                 )
