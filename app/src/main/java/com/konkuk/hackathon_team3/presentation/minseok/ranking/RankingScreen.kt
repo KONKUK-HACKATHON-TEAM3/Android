@@ -38,14 +38,12 @@ fun RankingRoute(
 
     RankingScreen(
         uiState = uiState,
-        navigateToRecordWrite = navigateToRecordWrite,
         modifier = modifier
     )
 }
 
 @Composable
 fun RankingScreen(
-    navigateToRecordWrite: () -> Unit,
     modifier: Modifier = Modifier,
     uiState: RankingUiState = RankingUiState()
 ) {
@@ -70,7 +68,7 @@ fun RankingScreen(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
 
-                Text(text = "심부름 면제권")
+                Text(text = uiState.price)
             }
         }
         Spacer(modifier = Modifier.height(12.dp))
@@ -81,7 +79,7 @@ fun RankingScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(text = "이번주 순위")
-            Text(text = "2025.08.14 ~ 2025.08.20")
+            Text(text = "2025.08.25 ~ 2025.08.31")
             Column(
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
@@ -103,8 +101,6 @@ fun RankingScreen(
 @Composable
 private fun PreviewRankingScreen() {
     KONKUKHACKATHONTEAM3Theme {
-        RankingScreen(
-            navigateToRecordWrite = {},
-        )
+        RankingScreen()
     }
 }
