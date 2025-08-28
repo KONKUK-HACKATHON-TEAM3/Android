@@ -18,3 +18,8 @@ data class FeedDto(
     val likeCount: Int,
     val likeStatus: Boolean
 )
+
+@Serializable
+data class CalendarDto(
+    val dateList: List<String>
+)

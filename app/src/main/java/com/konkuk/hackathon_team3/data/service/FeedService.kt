@@ -1,5 +1,6 @@
 package com.konkuk.hackathon_team3.data.service
 
+import com.konkuk.hackathon_team3.data.dto.response.CalendarDto
 import com.konkuk.hackathon_team3.data.dto.response.FeedResponseDto
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -26,4 +27,10 @@ interface FeedService {
         @Path("feedId") feedId: Long,
         @Query("memberId") memberId: Long,
     )
+
+    @GET("api/feeds/dates")
+    suspend fun getDates(
+        @Query("yearMonth") yearMonth: String
+    ): CalendarDto
+
 }
