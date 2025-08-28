@@ -175,7 +175,8 @@ fun GasCalendar(
 
 @Composable
 fun GasHomeCalendar(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navigateToCalendar:() -> Unit
 ) {
     val today = LocalDate.now()
     var selected by remember { mutableStateOf(today) }
@@ -188,7 +189,7 @@ fun GasHomeCalendar(
         modifier = modifier
             .gasComponentDesign()
             .padding(top = 20.dp, bottom = 14.dp)
-            .noRippleClickable(onClick = {}),
+            .noRippleClickable(navigateToCalendar),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
@@ -272,6 +273,8 @@ private fun PreviewGasCalendar() {
 @Composable
 private fun PreviewGasHomeCalendar() {
     KONKUKHACKATHONTEAM3Theme {
-        GasHomeCalendar()
+        GasHomeCalendar(
+            navigateToCalendar = {}
+        )
     }
 }
