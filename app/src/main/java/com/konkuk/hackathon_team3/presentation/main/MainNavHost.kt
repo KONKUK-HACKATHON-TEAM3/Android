@@ -80,18 +80,20 @@ fun MainNavHost(
 
             composable(route = "ranking") {
                 RankingRoute(
-                    navigateToRecordWrite = { navController.navigateToGasWriting() }
+                    popBackStack = { navController.popBackStack() },
                 )
             }
 
             composable(route = "gasWriting") {
                 GasWritingRoute(
-                    navigateToRanking = { navController.navigateToRanking() }
+                    popBackStack = { navController.popBackStack() },
+                    navigateToHome = { navController.navigateToHome() }
                 )
             }
 
             composable(route = "calendar") {
                 GasCalendarRoute(
+                    popBackStack = { navController.popBackStack() },
                     navigateToFeed = { date ->
                         navController.navigateToFeed(date)
                     }
@@ -99,11 +101,12 @@ fun MainNavHost(
             }
 
             composable(route = "addFamily") {
-                AddFamilyRoute()
+                AddFamilyRoute(
+                    popBackStack = { navController.popBackStack() })
             }
 
             composable(route = "alarm") {
-                AlarmRoute()
+                AlarmRoute(popBackStack = { navController.popBackStack() })
             }
 
             composable(

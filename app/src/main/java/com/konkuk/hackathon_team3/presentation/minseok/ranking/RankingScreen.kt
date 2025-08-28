@@ -29,7 +29,7 @@ import com.konkuk.hackathon_team3.ui.theme.KONKUKHACKATHONTEAM3Theme
 
 @Composable
 fun RankingRoute(
-    navigateToRecordWrite: () -> Unit,
+    popBackStack: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: RankingViewModel = viewModel()
 
@@ -37,21 +37,21 @@ fun RankingRoute(
     val uiState by viewModel.uiState.collectAsState()
 
     RankingScreen(
+        popBackStack=popBackStack,
         uiState = uiState,
-        navigateToRecordWrite = navigateToRecordWrite,
         modifier = modifier
     )
 }
 
 @Composable
 fun RankingScreen(
-    navigateToRecordWrite: () -> Unit,
+    popBackStack: () -> Unit,
     modifier: Modifier = Modifier,
     uiState: RankingUiState = RankingUiState()
 ) {
     Column(modifier = modifier) {
         GasTopbar(
-            backButtonClicked = {}
+            backButtonClicked = popBackStack
         )
         Spacer(modifier = Modifier.height(11.dp))
         Column(
@@ -70,7 +70,7 @@ fun RankingScreen(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
 
-                Text(text = "심부름 면제권")
+                Text(text = uiState.price)
             }
         }
         Spacer(modifier = Modifier.height(12.dp))
@@ -81,7 +81,7 @@ fun RankingScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(text = "이번주 순위")
-            Text(text = "2025.08.14 ~ 2025.08.20")
+            Text(text = "2025.08.25 ~ 2025.08.31")
             Column(
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
@@ -104,7 +104,7 @@ fun RankingScreen(
 private fun PreviewRankingScreen() {
     KONKUKHACKATHONTEAM3Theme {
         RankingScreen(
-            navigateToRecordWrite = {},
+            popBackStack = {}
         )
     }
 }

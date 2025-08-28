@@ -5,11 +5,14 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Matrix
+import android.media.ExifInterface
 import android.net.Uri
 import android.os.Environment
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -41,7 +44,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
@@ -77,7 +79,8 @@ import java.io.FileOutputStream
 
 @Composable
 fun GasWritingRoute(
-    navigateToRanking: () -> Unit,
+    popBackStack:()->Unit,
+    navigateToHome: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: GasWritingViewModel = viewModel()
 ) {
@@ -95,7 +98,7 @@ fun GasWritingRoute(
                     val inputStream = context.contentResolver.openInputStream(uri)
                     val bitmap = BitmapFactory.decodeStream(inputStream)
 
-                    val savedFile = saveBitmapToFile(context, bitmap)
+                    val savedFile = saveBitmapToFile(context, bitmap, uri = uri)
                     val newUri = FileProvider.getUriForFile(
                         context,
                         "${context.packageName}.provider",
@@ -146,6 +149,7 @@ fun GasWritingRoute(
     }
 
     GasWritingScreen(
+        popBackStack=popBackStack,
         uiState = uiState,
         onImageClick = {
             if (uiState.hasCameraPermission) {
@@ -165,7 +169,11 @@ fun GasWritingRoute(
         },
         onTextChange = viewModel::updateTextContent,
         onClearError = viewModel::clearError,
-        onUploadButtonClicked = navigateToRanking,
+        onUploadButtonClicked = {
+            viewModel.uploadFeed(context = context) {
+                navigateToHome()
+            }
+        },
         modifier = modifier
     )
 }
@@ -182,19 +190,53 @@ fun createImageUri(context: Context): Uri {
     )
 }
 
-private fun saveBitmapToFile(context: Context, bitmap: Bitmap): File {
+
+private fun saveBitmapToFile(context: Context, bitmap: Bitmap, uri: Uri): File {
+    val rotatedBitmap = rotateBitmapIfRequired(context, bitmap, uri)
+
     val file = File(
         context.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
         "photo_${System.currentTimeMillis()}.jpg"
     )
+
     FileOutputStream(file).use { out ->
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
+        rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
     }
+
     return file
+}
+
+private fun rotateBitmapIfRequired(context: Context, bitmap: Bitmap, uri: Uri): Bitmap {
+    return try {
+        val inputStream = context.contentResolver.openInputStream(uri)
+        val exif = inputStream?.use { ExifInterface(it) }
+
+        val orientation = exif?.getAttributeInt(
+            ExifInterface.TAG_ORIENTATION,
+            ExifInterface.ORIENTATION_NORMAL
+        )
+
+        when (orientation) {
+            ExifInterface.ORIENTATION_ROTATE_90 -> bitmap.rotate(90f)
+            ExifInterface.ORIENTATION_ROTATE_180 -> bitmap.rotate(180f)
+            ExifInterface.ORIENTATION_ROTATE_270 -> bitmap.rotate(270f)
+            else -> bitmap
+        }
+    } catch (e: Exception) {
+        Log.e("ImageRotation", "회전 보정 실패", e)
+        bitmap
+    } as Bitmap
+}
+
+fun Bitmap.rotate(degrees: Float): Bitmap {
+    val matrix = Matrix()
+    matrix.postRotate(degrees)
+    return Bitmap.createBitmap(this, 0, 0, width, height, matrix, true)
 }
 
 @Composable
 fun GasWritingScreen(
+    popBackStack:()->Unit,
     uiState: GasWritingUiState,
     onImageClick: () -> Unit,
     onRecordingToggle: () -> Unit,
@@ -205,160 +247,167 @@ fun GasWritingScreen(
 ) {
     val focusRequester: FocusRequester = remember { FocusRequester() }
 
-    Column(
+    Box(
         modifier = modifier
     ) {
-        GasTopbar(
-            backButtonClicked = {}
-        )
-
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-                .border(width = 2.dp, color = Color.White.copy(alpha = 0.5f), shape = RoundedCornerShape(16.dp))
-                .roundedBackgroundWithPadding(
-                    backgroundColor = Color(0xFFCCCCCC).copy(alpha = 0.2f),
-                    cornerRadius = 16.dp
-                )
-                .clickable { onImageClick() }
-                .aspectRatio(1f), contentAlignment = Alignment.Center
-        ) {
-            if (uiState.imageUri != null) {
-                AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(uiState.imageUri)
-                        .crossfade(true)
-                        .build(),
-                    contentDescription = "촬영된 이미지",
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .clip(RoundedCornerShape(16.dp))
-                        .rotate(90f),
-                    contentScale = ContentScale.Crop
-                )
-            } else {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Icon(
-                        Icons.Default.Add,
-                        contentDescription = null,
-                        modifier = Modifier.size(48.dp),
-                        tint = Color(0xFF8D8D8D)
-                    )
-                    Text(
-                        "탭해서 사진 촬영",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = Color(0xFF8D8D8D)
-                    )
-                    Text(
-                        "카메라로 사진을 찍어보세요",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = Color(0xFF8D8D8D)
-                    )
-                }
-            }
-        }
-
         Column(
-            modifier = Modifier
-                .gasComponentDesign()
-                .padding(vertical = 20.dp, horizontal = 21.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier.fillMaxSize()
         ) {
+            GasTopbar(
+                backButtonClicked = popBackStack
+            )
+
             Box(
                 modifier = Modifier
-                    .size(50.dp)
-                    .noRippleClickable(onRecordingToggle),
-                contentAlignment = Alignment.Center
-            ) {
-
-                if (uiState.isRecording) {
-                    RecordingAnimation()
-                } else {
-                    Icon(
-                        imageVector = ImageVector.vectorResource(R.drawable.ic_mic),
-                        contentDescription = null,
-                        tint = Color.Unspecified,
+                    .fillMaxWidth()
+                    .padding(16.dp)
+                    .border(width = 2.dp, color = Color.White.copy(alpha = 0.5f), shape = RoundedCornerShape(16.dp))
+                    .roundedBackgroundWithPadding(
+                        backgroundColor = Color(0xFFCCCCCC).copy(alpha = 0.2f),
+                        cornerRadius = 16.dp
                     )
-
+                    .clickable { onImageClick() }
+                    .aspectRatio(1f), contentAlignment = Alignment.Center
+            ) {
+                if (uiState.imageUri != null) {
+                    AsyncImage(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(uiState.imageUri)
+                            .crossfade(true)
+                            .build(),
+                        contentDescription = "촬영된 이미지",
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .clip(RoundedCornerShape(16.dp)),
+                        contentScale = ContentScale.Crop
+                    )
+                } else {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Icon(
+                            Icons.Default.Add,
+                            contentDescription = null,
+                            modifier = Modifier.size(48.dp),
+                            tint = Color(0xFF8D8D8D)
+                        )
+                        Text(
+                            "탭해서 사진 촬영",
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = Color(0xFF8D8D8D)
+                        )
+                        Text(
+                            "카메라로 사진을 찍어보세요",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = Color(0xFF8D8D8D)
+                        )
+                    }
                 }
             }
-            Spacer(modifier = Modifier.height(19.dp))
-            Row {
-                BasicTextField(
+
+            Column(
+                modifier = Modifier
+                    .gasComponentDesign()
+                    .padding(vertical = 20.dp, horizontal = 21.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Box(
                     modifier = Modifier
-                        .weight(1f)
-                        .focusRequester(focusRequester),
-                    value = uiState.textContent,
-                    onValueChange = {
-                        if (it.codePointCount(0, it.length) <= 150) {
-                            onTextChange(it)
-                        }
-                    },
-                    cursorBrush = SolidColor(Color(0xFF997C70)),
-                    textStyle = MaterialTheme.typography.labelMedium.copy(color = Color.Black),
-                    decorationBox = { innerTextField ->
-                        innerTextField()
-                        if (uiState.textContent.isEmpty()) {
-                            Text(
-                                text = "내용을 입력해주세요...",
-                                color = Color(0xFFCCCCCC),
-                                style = MaterialTheme.typography.labelMedium,
-                            )
-                        }
+                        .size(50.dp)
+                        .noRippleClickable(onRecordingToggle),
+                    contentAlignment = Alignment.Center
+                ) {
+
+                    if (uiState.isRecording) {
+                        RecordingAnimation()
+                    } else {
+                        Icon(
+                            imageVector = ImageVector.vectorResource(R.drawable.ic_mic),
+                            contentDescription = null,
+                            tint = Color.Unspecified,
+                        )
+
                     }
-                )
+                }
+                Spacer(modifier = Modifier.height(19.dp))
+                Row {
+                    BasicTextField(
+                        modifier = Modifier
+                            .weight(1f)
+                            .focusRequester(focusRequester),
+                        value = uiState.textContent,
+                        onValueChange = {
+                            if (it.codePointCount(0, it.length) <= 150) {
+                                onTextChange(it)
+                            }
+                        },
+                        cursorBrush = SolidColor(Color(0xFF997C70)),
+                        textStyle = MaterialTheme.typography.labelMedium.copy(color = Color.Black),
+                        decorationBox = { innerTextField ->
+                            innerTextField()
+                            if (uiState.textContent.isEmpty()) {
+                                Text(
+                                    text = "내용을 입력해주세요...",
+                                    color = Color(0xFFCCCCCC),
+                                    style = MaterialTheme.typography.labelMedium,
+                                )
+                            }
+                        }
+                    )
+                }
+                Spacer(modifier = Modifier.height(4.dp))
             }
             Spacer(modifier = Modifier.height(4.dp))
-        }
-        Spacer(modifier = Modifier.height(4.dp))
 
-        Text(
-            modifier = Modifier
-                .padding(horizontal = 20.dp)
-                .align(Alignment.End),
-            text = "${uiState.textContent.length}자",
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        Spacer(modifier = Modifier.weight(1f))
-        Text(
-            text = "저장하기",
-            modifier = Modifier.gasComponentDesign()
-                .padding(16.dp)
-                .pressedEffectClickable(onUploadButtonClicked),
-            textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.titleSmall,
-        )
-        Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                modifier = Modifier
+                    .padding(horizontal = 20.dp)
+                    .align(Alignment.End),
+                text = "${uiState.textContent.length}자",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            Text(
+                text = "저장하기",
+                modifier = Modifier
+                    .gasComponentDesign()
+                    .padding(16.dp)
+                    .pressedEffectClickable(onUploadButtonClicked),
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.titleSmall,
+            )
+            Spacer(modifier = Modifier.height(16.dp))
 
 
-        uiState.sttError?.let { error ->
-            Card(
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.errorContainer
-                )
-            ) {
-                Row(
-                    modifier = Modifier.padding(12.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = error,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onErrorContainer,
-                        modifier = Modifier.weight(1f)
+            uiState.sttError?.let { error ->
+                Card(
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.errorContainer
                     )
+                ) {
+                    Row(
+                        modifier = Modifier.padding(12.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = error,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onErrorContainer,
+                            modifier = Modifier.weight(1f)
+                        )
 
-                    TextButton(onClick = onClearError) {
-                        Text("닫기")
+                        TextButton(onClick = onClearError) {
+                            Text("닫기")
+                        }
                     }
                 }
             }
+        }
+        if (uiState.isLoading){
+            UploadLoadingAnimation()
         }
     }
 }
@@ -395,6 +444,37 @@ fun RecordingAnimation() {
     }
 }
 
+@Composable
+fun UploadLoadingAnimation() {
+    val composition by rememberLottieComposition(
+        LottieCompositionSpec.Asset("Uploading.json")
+    )
+    val lottieAnimatable = rememberLottieAnimatable()
+
+    LaunchedEffect(composition) {
+        lottieAnimatable.animate(
+            composition = composition,
+            clipSpec = LottieClipSpec.Frame(0, 1200),
+            initialProgress = 0f,
+            iteration = LottieConstants.IterateForever
+        )
+    }
+
+    Box(
+        modifier = Modifier.fillMaxSize().background(color = Color.White.copy(0.3f)),
+        contentAlignment = Alignment.Center
+    ) {
+        LottieAnimation(
+            composition = composition,
+            iterations = LottieConstants.IterateForever,
+            modifier = Modifier
+                .size(200.dp)
+                .align(Alignment.Center),
+            contentScale = ContentScale.FillWidth
+        )
+    }
+}
+
 
 @Preview(showBackground = true)
 @Composable
@@ -413,7 +493,8 @@ private fun PreviewGasWritingScreen() {
             onRecordingToggle = {},
             onTextChange = {},
             onClearError = {},
-            onUploadButtonClicked = {}
+            onUploadButtonClicked = {},
+            popBackStack={}
         )
     }
 }

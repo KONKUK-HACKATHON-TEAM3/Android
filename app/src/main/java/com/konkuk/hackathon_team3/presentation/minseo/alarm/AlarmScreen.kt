@@ -32,12 +32,14 @@ import java.time.LocalTime
 
 @Composable
 fun AlarmRoute(
+    popBackStack:()->Unit,
     modifier: Modifier = Modifier,
     viewModel: AlarmViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     AlarmScreen(
+        popBackStack=popBackStack,
         modifier = modifier,
         uiState = uiState
     )
@@ -45,6 +47,7 @@ fun AlarmRoute(
 
 @Composable
 fun AlarmScreen(
+    popBackStack:()->Unit,
     modifier: Modifier = Modifier,
     uiState: AlarmUiState = AlarmUiState()
 ) {
@@ -108,6 +111,6 @@ private fun LocalTime.toRelative(now: LocalTime = LocalTime.now()): String {
 @Composable
 private fun PreviewAlarmScreen() {
     KONKUKHACKATHONTEAM3Theme {
-        AlarmScreen()
+        AlarmScreen(popBackStack={})
     }
 }

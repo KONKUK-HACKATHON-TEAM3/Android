@@ -14,10 +14,12 @@ import java.time.LocalDate
 
 @Composable
 fun GasCalendarRoute(
+    popBackStack:()->Unit,
     navigateToFeed: (LocalDate) -> Unit,
     modifier: Modifier = Modifier
 ) {
     GasCalendarScreen(
+        popBackStack=popBackStack,
         navigateToFeed = navigateToFeed,
         modifier = modifier
     )
@@ -25,11 +27,12 @@ fun GasCalendarRoute(
 
 @Composable
 fun GasCalendarScreen(
+    popBackStack:()->Unit,
     navigateToFeed: (LocalDate) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
-        GasTopbar(backButtonClicked = {}, modifier = Modifier.padding(vertical = 10.dp))
+        GasTopbar(backButtonClicked = popBackStack, modifier = Modifier.padding(vertical = 10.dp))
 
         GasCalendar(
             onDateClicked = { date ->
@@ -44,7 +47,8 @@ fun GasCalendarScreen(
 private fun PreviewGasCalendarScreen() {
     KONKUKHACKATHONTEAM3Theme {
         GasCalendarScreen(
-            navigateToFeed = {}
+            navigateToFeed = {},
+            popBackStack={}
         )
     }
 }

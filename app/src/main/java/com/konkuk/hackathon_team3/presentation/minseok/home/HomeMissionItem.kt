@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -21,19 +20,21 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.konkuk.hackathon_team3.R
 import com.konkuk.hackathon_team3.presentation.model.MissionData
 import com.konkuk.hackathon_team3.presentation.util.roundedBackgroundWithPadding
+import com.konkuk.hackathon_team3.ui.theme.KONKUKHACKATHONTEAM3Theme
+import com.konkuk.hackathon_team3.ui.theme.boldStyle
+import com.konkuk.hackathon_team3.ui.theme.regularStyle
 
 @Composable
 fun HomeMissionItem(missionData: MissionData, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
-            .width(156.dp)
+            .size(164.dp)
             .border(width = 2.dp, color = Color.White.copy(alpha = 0.2f), shape = RoundedCornerShape(16.dp))
             .background(
                 brush = Brush.verticalGradient(
@@ -47,9 +48,14 @@ fun HomeMissionItem(missionData: MissionData, modifier: Modifier = Modifier) {
             .background(color = Color.White.copy(alpha = 0.2f), shape = RoundedCornerShape(16.dp))
             .padding(16.dp)
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(text = missionData.title)
-            Spacer(modifier = Modifier.width(6.dp))
+        Row(verticalAlignment = Alignment.Bottom) {
+            Text(
+                text = missionData.title,
+                style = KONKUKHACKATHONTEAM3Theme.typography.boldStyle,
+                fontSize = 14.sp,
+
+                )
+            Spacer(modifier = Modifier.weight(1f))
             Text(
                 text = "${missionData.point}P",
                 modifier = Modifier
@@ -58,17 +64,18 @@ fun HomeMissionItem(missionData: MissionData, modifier: Modifier = Modifier) {
                         cornerRadius = 4.dp,
                         padding = PaddingValues(horizontal = 7.dp, vertical = 5.dp)
                     ),
-                style = TextStyle(
-                    fontSize = 9.sp,
-                    lineHeight = 9.sp
-                )
+                style = KONKUKHACKATHONTEAM3Theme.typography.regularStyle,
+                fontSize = 9.sp
             )
 
         }
         Spacer(modifier = Modifier.height(10.dp))
-        Text(text = missionData.description, fontSize = 10.sp)
-        Spacer(modifier = Modifier.height(32.dp))
-
+        Text(
+            text = missionData.description, fontSize = 10.sp,
+            style = KONKUKHACKATHONTEAM3Theme.typography.regularStyle,
+            lineHeight = 12.sp
+        )
+        Spacer(modifier = Modifier.weight(1f))
         Icon(
             imageVector = ImageVector.vectorResource(if (missionData.isCleared) R.drawable.ic_mission_stamp else R.drawable.ic_mission_no_stamp),
             contentDescription = null,
