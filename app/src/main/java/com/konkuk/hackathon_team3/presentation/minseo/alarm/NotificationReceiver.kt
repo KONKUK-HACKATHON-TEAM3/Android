@@ -37,8 +37,8 @@ class NotificationReceiver : BroadcastReceiver() {
             // 알림 생성
             val notification = NotificationCompat.Builder(it, "channel_gas_v1")
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setContentTitle("가스")
-                .setContentText("생존 신고를 아직 작성하지 않으셨네요. 작성하러 가볼까요?")
+                .setContentTitle("GAS")
+                .setContentText("오늘의 스토리를 아직 작성하지 않으셨네요. 작성하러 가볼까요?")
                 .setAutoCancel(true)
                 .setContentIntent(clickPendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
