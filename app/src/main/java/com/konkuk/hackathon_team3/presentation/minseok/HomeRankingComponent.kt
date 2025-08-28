@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -99,6 +100,7 @@ fun RankingItem(modifier: Modifier = Modifier, rankingData: RankingData) {
 
     Column(modifier = modifier) {
         Text(
+            modifier = Modifier.padding(top = 2.dp),
             text = "${rankingData.rank}위 ${rankingData.nickname}",
             color = Color.Black,
             fontSize = 12.sp,

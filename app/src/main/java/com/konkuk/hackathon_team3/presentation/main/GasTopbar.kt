@@ -1,5 +1,6 @@
 package com.konkuk.hackathon_team3.presentation.main
 
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,10 +22,14 @@ import com.konkuk.hackathon_team3.presentation.util.noRippleClickable
 @Composable
 fun GasTopbar(
     modifier: Modifier = Modifier,
-    backButtonClicked: () -> Unit = {},
+    backButtonClicked: (() -> Unit)? = {
+    },
     isHomeScreen: Boolean = false,
     navigateToNotification: () -> Unit = {},
 ) {
+    val dispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
+
+
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -37,7 +42,9 @@ fun GasTopbar(
                 modifier = Modifier
                     .padding(16.dp)
                     .align(Alignment.CenterStart)
-                    .noRippleClickable(backButtonClicked),
+                    .noRippleClickable{
+                        backButtonClicked?.invoke() ?: dispatcher?.onBackPressed()
+                    },
             )
         }
         Icon(

@@ -7,10 +7,14 @@ import android.media.AudioRecord
 import android.media.MediaRecorder
 import android.net.Uri
 import android.util.Log
+import android.widget.Toast
 import androidx.annotation.RequiresPermission
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.konkuk.hackathon_team3.data.mapper.toRankingDataList
 import com.konkuk.hackathon_team3.data.service.ClovaServicePool
+import com.konkuk.hackathon_team3.data.service.ServicePool
+import com.konkuk.hackathon_team3.presentation.util.showCustomToast
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -19,7 +23,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.Callback
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -39,10 +46,14 @@ data class GasWritingUiState(
     val hasAudioPermission: Boolean = false,
     val hasCameraPermission: Boolean = false,
     val isProcessingSTT: Boolean = false,
-    val sttError: String? = null
+    val sttError: String? = null,
+
+    val isLoading : Boolean = false
 )
 
 class GasWritingViewModel : ViewModel() {
+    private val uploadService by lazy { ServicePool.uploadService }
+
 
     private val _uiState = MutableStateFlow(GasWritingUiState())
     val uiState: StateFlow<GasWritingUiState> = _uiState.asStateFlow()
@@ -338,6 +349,48 @@ class GasWritingViewModel : ViewModel() {
             (value.toInt() and 0xFF).toByte(),
             ((value.toInt() shr 8) and 0xFF).toByte()
         )
+    }
+
+    fun uploadFeed(context: Context,callback:()->Unit) {
+        val uri = uiState.value.imageUri ?: return
+        val text = uiState.value.textContent
+
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isLoading = true)
+
+            try {
+                // 🔥 File 대신 InputStream 사용
+                val inputStream = context.contentResolver.openInputStream(uri)
+                    ?: throw IOException("Uri InputStream is null")
+
+                val requestFile = inputStream.readBytes()
+                    .toRequestBody("image/*".toMediaTypeOrNull())
+
+                val fileName = "image_${System.currentTimeMillis()}.jpg"
+                val mediaPart = MultipartBody.Part.createFormData("media", fileName, requestFile)
+
+                val textPart = text.toRequestBody("text/plain".toMediaTypeOrNull())
+                val memberIdPart = "1".toRequestBody("text/plain".toMediaTypeOrNull())
+
+                uploadService.postFeed(
+                    memberId = memberIdPart,
+                    media = mediaPart,
+                    text = textPart
+                )
+
+                Log.d("Upload", "업로드 성공")
+
+            } catch (e: Exception) {
+                Log.e("Upload", "업로드 실패", e)
+            } finally {
+                _uiState.value = _uiState.value.copy(isLoading = false)
+                callback()
+                showCustomToast(
+                    context = context,
+                    message = "업로드 완료!"
+                )
+            }
+        }
     }
 
     fun clearError() {

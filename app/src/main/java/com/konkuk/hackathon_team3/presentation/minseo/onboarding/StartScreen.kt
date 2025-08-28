@@ -14,12 +14,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -54,19 +58,27 @@ fun StartScreen(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.ic_app_logo),
+        Spacer(Modifier.weight(1f))
+
+        Icon(
+            imageVector = ImageVector.vectorResource(R.drawable.ic_start_logo),
             contentDescription = "logo",
-            modifier = Modifier
-                .padding(top = 166.dp)
-                .size(110.dp, 45.dp)
+            tint = Color.Unspecified
+
+        )
+        Spacer(Modifier.height(27.dp))
+
+        Icon(
+            imageVector = ImageVector.vectorResource(R.drawable.ic_start_text),
+            contentDescription = "logo",
+            tint = Color.Unspecified
         )
         Spacer(Modifier.weight(1f))
 
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 68.dp)
+                .padding(bottom = 68.dp),
         ) {
             Box(
                 modifier = Modifier
@@ -86,6 +98,7 @@ fun StartScreen(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
+                    modifier = Modifier.padding(top = 7.dp, bottom = 3.dp),
                     text = "입장하기",
                     color = Color.White,
                     fontSize = 20.sp,
@@ -134,6 +147,8 @@ fun StartScreen(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
+                    modifier = Modifier.padding(top = 4.dp),
+
                     text = "새로 만들기",
                     color = Color.Black,
                     fontSize = 20.sp,

@@ -226,8 +226,8 @@ fun GasHomeCalendar(
 
         Text(
             text = monthLabel,
-            fontSize = 14.sp,
-            style = KONKUKHACKATHONTEAM3Theme.typography.boldStyle,
+            fontSize = 9.sp,
+            style = KONKUKHACKATHONTEAM3Theme.typography.regularStyle,
             color = Color.Black
         )
         Spacer(Modifier.height(8.dp))
@@ -243,7 +243,8 @@ fun GasHomeCalendar(
                     Text(
                         text = it.description,
                         color = Color.Black,
-                        fontSize = 12.sp,
+                        fontSize = 10.sp,
+                        style = KONKUKHACKATHONTEAM3Theme.typography.boldStyle,
                         textAlign = TextAlign.Center
                     )
                 }

@@ -35,6 +35,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -45,6 +46,8 @@ import com.konkuk.hackathon_team3.presentation.minseok.HomeRankingComponent
 import com.konkuk.hackathon_team3.presentation.util.gasComponentDesign
 import com.konkuk.hackathon_team3.presentation.util.noRippleClickable
 import com.konkuk.hackathon_team3.ui.theme.KONKUKHACKATHONTEAM3Theme
+import com.konkuk.hackathon_team3.ui.theme.boldStyle
+import com.konkuk.hackathon_team3.ui.theme.regularStyle
 
 @Composable
 fun MainRoute(
@@ -128,12 +131,27 @@ fun HomerScreen(
                             .padding(vertical = 24.dp, horizontal = 28.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text(text = "가족 스토리")
-                        Text(text = "최근 업데이트: 2시간 전")
+                        Text(
+                            text = "가족 스토리",
+                            fontSize = 14.sp,
+                            style = KONKUKHACKATHONTEAM3Theme.typography.boldStyle,
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = "최근 업데이트: 2시간 전",
+                            fontSize = 9.sp,
+                            style = KONKUKHACKATHONTEAM3Theme.typography.regularStyle,
+                        )
+                        Spacer(modifier = Modifier.height(20.dp))
+
                         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                             uiState.recentFeedList.forEach { homeRecentFeedData ->
                                 Column(modifier = Modifier.weight(1f)) {
-                                    Text(text = homeRecentFeedData.nickname)
+                                    Text(
+                                        text = homeRecentFeedData.nickname,
+                                        fontSize = 9.sp,
+                                        style = KONKUKHACKATHONTEAM3Theme.typography.regularStyle
+                                    )
                                     Spacer(modifier = Modifier.height(5.dp))
                                     AsyncImage(
                                         model = ImageRequest.Builder(LocalContext.current)

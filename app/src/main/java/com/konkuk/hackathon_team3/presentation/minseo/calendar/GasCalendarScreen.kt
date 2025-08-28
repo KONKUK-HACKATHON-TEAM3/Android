@@ -18,6 +18,7 @@ import java.time.YearMonth
 
 @Composable
 fun GasCalendarRoute(
+    popBackStack:()->Unit,
     navigateToFeed: (LocalDate) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: GasCalendarViewModel = viewModel()
@@ -25,6 +26,7 @@ fun GasCalendarRoute(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     GasCalendarScreen(
+        popBackStack=popBackStack,
         navigateToFeed = navigateToFeed,
         markedDates = uiState.markedDates,
         onMonthChanged = viewModel::loadMarkedDates,
@@ -36,6 +38,7 @@ fun GasCalendarRoute(
 
 @Composable
 fun GasCalendarScreen(
+    popBackStack:()->Unit,
     navigateToFeed: (LocalDate) -> Unit,
     markedDates: List<LocalDate>,
     onMonthChanged: (YearMonth) -> Unit,
@@ -44,7 +47,7 @@ fun GasCalendarScreen(
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
-        GasTopbar(backButtonClicked = {}, modifier = Modifier.padding(vertical = 10.dp))
+        GasTopbar(backButtonClicked = popBackStack, modifier = Modifier.padding(vertical = 10.dp))
 
         GasCalendar(
             markedDates = markedDates,
@@ -63,9 +66,10 @@ fun GasCalendarScreen(
 private fun PreviewGasCalendarScreen() {
     KONKUKHACKATHONTEAM3Theme {
         GasCalendarScreen(
+            navigateToFeed = {},
+            popBackStack={},
             markedDates = emptyList(),
             onMonthChanged = {},
-            navigateToFeed = {},
             selectedDate = LocalDate.now(),
             onSelectedDateChange = {}
         )

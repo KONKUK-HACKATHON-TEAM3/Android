@@ -11,6 +11,7 @@ import com.konkuk.hackathon_team3.data.service.ServicePool
 import com.konkuk.hackathon_team3.presentation.model.HomeFamilyData
 import com.konkuk.hackathon_team3.presentation.model.HomeRecentFeedData
 import com.konkuk.hackathon_team3.presentation.model.MissionData
+import com.konkuk.hackathon_team3.presentation.model.ProfileType
 import com.konkuk.hackathon_team3.presentation.model.RankingData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -78,19 +79,19 @@ data class HomeUiState(
     val familyList: List<HomeFamilyData> = listOf(
         HomeFamilyData(
             nickname = "신민석",
-            profileEnum = ""
+            profileEnum = ProfileType.MOTHER
         ),
         HomeFamilyData(
             nickname = "송민서",
-            profileEnum = ""
+            profileEnum = ProfileType.MOTHER
         ),
         HomeFamilyData(
             nickname = "서아영",
-            profileEnum = ""
+            profileEnum = ProfileType.MOTHER
         ),
         HomeFamilyData(
             nickname = "김창균",
-            profileEnum = ""
+            profileEnum = ProfileType.MOTHER
         ),
     ),
 )
