@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,6 +25,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.konkuk.hackathon_team3.R
@@ -32,6 +34,9 @@ import com.konkuk.hackathon_team3.presentation.minseok.feed.FeedUiState
 import com.konkuk.hackathon_team3.presentation.util.gasComponentDesign
 import com.konkuk.hackathon_team3.presentation.util.noRippleClickable
 import com.konkuk.hackathon_team3.presentation.util.roundedBackgroundWithPadding
+import com.konkuk.hackathon_team3.ui.theme.KONKUKHACKATHONTEAM3Theme
+import com.konkuk.hackathon_team3.ui.theme.boldStyle
+import com.konkuk.hackathon_team3.ui.theme.regularStyle
 
 @Composable
 fun CardBack(
@@ -61,10 +66,21 @@ fun CardBack(
                         tint = Color.Unspecified,
                         modifier = Modifier.size(40.dp)
                     )
-                    Text(text = feed.nickname)
+                    Spacer(Modifier.width(6.dp))
+                    Text(
+                        text = feed.nickname,
+                        fontSize = 12.sp,
+                        style = KONKUKHACKATHONTEAM3Theme.typography.boldStyle
+                    )
                 }
                 Spacer(modifier = Modifier.height(13.dp))
-                Text(text = feed.text ?: "")
+                if (!feed.text.isNullOrBlank()) {
+                    Text(
+                        text = feed.text,
+                        fontSize = 12.sp,
+                        style = KONKUKHACKATHONTEAM3Theme.typography.regularStyle
+                    )
+                }
                 Spacer(modifier = Modifier.height(10.dp))
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
@@ -83,10 +99,21 @@ fun CardBack(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = "${feed.tag}")
+                    Text(
+                        text = "${feed.tag}",
+                        fontSize = 12.sp,
+                        style = KONKUKHACKATHONTEAM3Theme.typography.regularStyle
+                    )
                     Spacer(modifier = Modifier.weight(1f))
-                    Row(modifier = Modifier.noRippleClickable()) {
-                        Text(text = "${feed.likeCount}")
+                    Row(
+                        modifier = Modifier.noRippleClickable(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "${feed.likeCount}",
+                            fontSize = 12.sp,
+                            style = KONKUKHACKATHONTEAM3Theme.typography.regularStyle
+                        )
                         Icon(
                             imageVector = ImageVector.vectorResource(R.drawable.ic_list_false),
                             contentDescription = null,
