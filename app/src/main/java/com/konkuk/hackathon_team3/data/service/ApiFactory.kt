@@ -40,4 +40,6 @@ object ServicePool {
     val rankingService = ApiFactory.create<RankingService>()
 
     val uploadService = ApiFactory.create<UploadService>()
+
+    val feedService = ApiFactory.create<FeedService>()
 }
