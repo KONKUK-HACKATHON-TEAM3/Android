@@ -8,6 +8,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.konkuk.hackathon_team3.ui.theme.KONKUKHACKATHONTEAM3Theme
+import com.konkuk.hackathon_team3.ui.theme.boldStyle
 
 @Composable
 fun TransparentHintTextField(
@@ -26,13 +28,12 @@ fun TransparentHintTextField(
             fontSize = 40.sp,
             fontWeight = FontWeight.ExtraBold
         ),
-
         placeholder = {
             Text(
                 text = hint,
                 color = Color(0xFFBDBDBD),
                 fontSize = 40.sp,
-                fontWeight = FontWeight.ExtraBold
+                style = KONKUKHACKATHONTEAM3Theme.typography.boldStyle
             )
         },
         colors = TextFieldDefaults.colors(

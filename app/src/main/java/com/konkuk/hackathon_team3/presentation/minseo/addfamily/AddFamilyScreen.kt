@@ -19,7 +19,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -28,6 +27,7 @@ import com.konkuk.hackathon_team3.presentation.main.GasTopbar
 import com.konkuk.hackathon_team3.presentation.util.noRippleClickable
 import com.konkuk.hackathon_team3.presentation.util.roundedBackgroundWithPadding
 import com.konkuk.hackathon_team3.ui.theme.KONKUKHACKATHONTEAM3Theme
+import com.konkuk.hackathon_team3.ui.theme.boldStyle
 
 @Composable
 fun AddFamilyRoute(
@@ -67,7 +67,7 @@ fun AddFamilyScreen(
             Text(
                 text = "입장 코드",
                 fontSize = 14.sp,
-                fontWeight = FontWeight.SemiBold
+                style = KONKUKHACKATHONTEAM3Theme.typography.boldStyle
             )
             Spacer(Modifier.height(20.dp))
 
@@ -89,7 +89,7 @@ fun AddFamilyScreen(
                 Text(
                     text = inviteCode,
                     fontSize = 20.sp,
-                    fontWeight = FontWeight.SemiBold
+                    style = KONKUKHACKATHONTEAM3Theme.typography.boldStyle
                 )
             }
         }

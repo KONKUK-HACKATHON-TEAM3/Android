@@ -16,7 +16,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -24,6 +23,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.konkuk.hackathon_team3.presentation.main.GasTopbar
 import com.konkuk.hackathon_team3.ui.theme.KONKUKHACKATHONTEAM3Theme
+import com.konkuk.hackathon_team3.ui.theme.boldStyle
+import com.konkuk.hackathon_team3.ui.theme.regularStyle
 import kotlinx.coroutines.delay
 import java.time.Duration
 import java.time.LocalTime
@@ -82,13 +83,13 @@ fun AlarmScreen(
                     Text(
                         text = alarm.message,
                         fontSize = 10.sp,
-                        fontWeight = FontWeight.SemiBold
+                        style = KONKUKHACKATHONTEAM3Theme.typography.boldStyle
                     )
 
                     Text(
                         text = alarm.time.toRelative(now),
                         fontSize = 10.sp,
-                        fontWeight = FontWeight.Medium
+                        style = KONKUKHACKATHONTEAM3Theme.typography.regularStyle
                     )
                 }
             }
