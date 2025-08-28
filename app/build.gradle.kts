@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
     id("kotlin-kapt")
+    id("com.google.gms.google-services")
 }
 
 val properties = Properties().apply {
@@ -97,4 +98,7 @@ dependencies {
 
     // Lottie
     implementation(libs.lottie.compose)
+
+    // FCM
+    implementation(platform("com.google.firebase:firebase-bom:34.1.0"))
 }

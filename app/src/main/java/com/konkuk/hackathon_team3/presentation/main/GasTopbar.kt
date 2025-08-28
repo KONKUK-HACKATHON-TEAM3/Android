@@ -21,15 +21,15 @@ import com.konkuk.hackathon_team3.presentation.util.noRippleClickable
 @Composable
 fun GasTopbar(
     modifier: Modifier = Modifier,
-    backButtonClicked: () -> Unit={},
+    backButtonClicked: () -> Unit = {},
     isHomeScreen: Boolean = false,
-    navigateToNotification: () -> Unit = {}
+    navigateToNotification: () -> Unit = {},
 ) {
     Box(
         modifier = modifier
             .fillMaxWidth()
     ) {
-        if (!isHomeScreen){
+        if (!isHomeScreen) {
             Icon(
                 imageVector = ImageVector.vectorResource(R.drawable.ic_back_arrow),
                 contentDescription = null,

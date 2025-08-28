@@ -25,13 +25,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
+import com.konkuk.hackathon_team3.presentation.minseok.feed.FeedUiState
 import kotlinx.coroutines.launch
 
 @Composable
 fun DetailGasAnimationCard(
     visible: Boolean,
     onDismiss: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    uiState: FeedUiState = FeedUiState()
 ) {
     val scope = rememberCoroutineScope()
     val manualRotation = remember { Animatable(0f) }
@@ -47,8 +49,7 @@ fun DetailGasAnimationCard(
     val cameraDistance = with(LocalDensity.current) { 12.dp.toPx() }
 
     Box(
-        modifier = modifier
-            .fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         AnimatedVisibility(
@@ -101,9 +102,10 @@ fun DetailGasAnimationCard(
                 }
 
                 if (showBack) {
-                    CardBack(onCancel = onClose, onFlip = onFlip)
+                    CardFront(onFlip = onFlip)
+
                 } else {
-                    CardFront(onCancel = onClose, onFlip = onFlip)
+                    CardBack(onCancel = onClose, uiState = uiState)
                 }
             }
         }

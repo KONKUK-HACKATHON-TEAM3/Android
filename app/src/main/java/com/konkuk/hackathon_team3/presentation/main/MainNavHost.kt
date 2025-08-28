@@ -6,8 +6,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.konkuk.hackathon_team3.presentation.minseo.addfamily.AddFamilyRoute
 import com.konkuk.hackathon_team3.presentation.minseo.alarm.AlarmRoute
 import com.konkuk.hackathon_team3.presentation.minseo.calendar.GasCalendarRoute
@@ -71,7 +73,7 @@ fun MainNavHost(
                     navigateToCalendar = { navController.navigateToCalendar() },
                     navigateToAddFamily = { navController.navigateToAddFamily() },
                     navigateToAlarm = { navController.navigateToAlarm() },
-                    navigateToFeed = { navController.navigateToFeed() }
+                    navigateToFeed = { }
 
                 )
             }
@@ -89,7 +91,11 @@ fun MainNavHost(
             }
 
             composable(route = "calendar") {
-                GasCalendarRoute()
+                GasCalendarRoute(
+                    navigateToFeed = { date ->
+                        navController.navigateToFeed(date)
+                    }
+                )
             }
 
             composable(route = "addFamily") {
@@ -100,8 +106,15 @@ fun MainNavHost(
                 AlarmRoute()
             }
 
-            composable(route = "feed") {
-                FeedRoute()
+            composable(
+                route = "feed/{date}",
+                arguments = listOf(navArgument("date") { type = NavType.StringType })
+            ) { backStackEntry ->
+                val dateArg = backStackEntry.arguments?.getString("date")
+                FeedRoute(
+                    dateArg = dateArg,
+                    onCloseAll = { navController.popBackStack() }
+                )
             }
         }
     }
