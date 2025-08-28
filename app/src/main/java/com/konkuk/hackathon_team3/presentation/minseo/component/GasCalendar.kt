@@ -22,7 +22,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -31,6 +30,8 @@ import com.konkuk.hackathon_team3.presentation.util.gasComponentDesign
 import com.konkuk.hackathon_team3.presentation.util.noRippleClickable
 import com.konkuk.hackathon_team3.presentation.util.roundedBackgroundWithPadding
 import com.konkuk.hackathon_team3.ui.theme.KONKUKHACKATHONTEAM3Theme
+import com.konkuk.hackathon_team3.ui.theme.boldStyle
+import com.konkuk.hackathon_team3.ui.theme.regularStyle
 import java.time.LocalDate
 import java.time.YearMonth
 
@@ -98,7 +99,7 @@ fun GasCalendar(
             Text(
                 text = monthLabel,
                 fontSize = 14.sp,
-                fontWeight = FontWeight.SemiBold,
+                style = KONKUKHACKATHONTEAM3Theme.typography.boldStyle,
                 color = Color.White,
                 modifier = Modifier.padding(horizontal = 8.dp)
             )
@@ -163,7 +164,7 @@ fun GasCalendar(
                                     else -> Color.White
                                 },
                                 fontSize = 13.sp,
-                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+                                style = if (isSelected) KONKUKHACKATHONTEAM3Theme.typography.boldStyle else KONKUKHACKATHONTEAM3Theme.typography.regularStyle
                             )
                         }
                     }
@@ -195,7 +196,7 @@ fun GasHomeCalendar(
         Text(
             text = "가족 캘린더",
             fontSize = 14.sp,
-            fontWeight = FontWeight.SemiBold,
+            style = KONKUKHACKATHONTEAM3Theme.typography.boldStyle,
             color = Color.Black
         )
         Spacer(Modifier.height(4.dp))
@@ -203,7 +204,7 @@ fun GasHomeCalendar(
         Text(
             text = monthLabel,
             fontSize = 14.sp,
-            fontWeight = FontWeight.SemiBold,
+            style = KONKUKHACKATHONTEAM3Theme.typography.boldStyle,
             color = Color.Black
         )
         Spacer(Modifier.height(8.dp))
@@ -253,7 +254,7 @@ fun GasHomeCalendar(
                             else -> Color.Black
                         },
                         fontSize = 13.sp,
-                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+                        style = if (isSelected) KONKUKHACKATHONTEAM3Theme.typography.boldStyle else KONKUKHACKATHONTEAM3Theme.typography.regularStyle
                     )
                 }
             }

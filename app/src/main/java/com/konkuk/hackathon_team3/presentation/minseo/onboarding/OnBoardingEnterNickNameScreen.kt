@@ -16,7 +16,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -26,6 +25,7 @@ import com.konkuk.hackathon_team3.presentation.util.AppGradients
 import com.konkuk.hackathon_team3.presentation.util.noRippleClickable
 import com.konkuk.hackathon_team3.presentation.util.roundedBackgroundWithPadding
 import com.konkuk.hackathon_team3.ui.theme.KONKUKHACKATHONTEAM3Theme
+import com.konkuk.hackathon_team3.ui.theme.boldStyle
 
 @Composable
 fun OnBoardingEnterNickNameRoute(
@@ -62,7 +62,7 @@ fun OnBoardingEnterNickNameScreen(
             Text(
                 text = pageType.title,
                 fontSize = 20.sp,
-                fontWeight = FontWeight.SemiBold,
+                style = KONKUKHACKATHONTEAM3Theme.typography.boldStyle,
                 modifier = Modifier.padding(start = 32.dp)
             )
             Spacer(Modifier.height(30.dp))
@@ -98,7 +98,7 @@ fun OnBoardingEnterNickNameScreen(
                 text = pageType.buttonText,
                 color = (if (nickname.isNotEmpty()) Color.White else Color(0xFFCFCFCF)),
                 fontSize = 20.sp,
-                fontWeight = FontWeight.Bold
+                style = KONKUKHACKATHONTEAM3Theme.typography.boldStyle
             )
         }
     }

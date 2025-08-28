@@ -26,14 +26,14 @@ import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.konkuk.hackathon_team3.R
 import com.konkuk.hackathon_team3.presentation.model.RankingData
 import com.konkuk.hackathon_team3.presentation.util.noRippleClickable
+import com.konkuk.hackathon_team3.ui.theme.KONKUKHACKATHONTEAM3Theme
+import com.konkuk.hackathon_team3.ui.theme.boldStyle
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -62,7 +62,7 @@ fun HomeRankingComponent(
         Text(
             text = "이번 주 순위", color = Color.Black,
             fontSize = 14.sp,
-            fontWeight = FontWeight.SemiBold
+            style = KONKUKHACKATHONTEAM3Theme.typography.boldStyle
         )
         Spacer(modifier = Modifier.height(20.dp))
 
@@ -100,20 +100,16 @@ fun RankingItem(modifier: Modifier = Modifier, rankingData: RankingData) {
     Column(modifier = modifier) {
         Text(
             text = "${rankingData.rank}위 ${rankingData.nickname}",
-            style = TextStyle(
-                color = Color.Black,
-                fontSize = 12.sp,
-                fontWeight = FontWeight.SemiBold
-            )
+            color = Color.Black,
+            fontSize = 12.sp,
+            style = KONKUKHACKATHONTEAM3Theme.typography.boldStyle
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = "${rankingData.point}점",
-            style = TextStyle(
-                color = Color.Black,
-                fontSize = 9.sp,
-                fontWeight = FontWeight.Normal
-            )
+            color = Color.Black,
+            fontSize = 9.sp,
+            style = KONKUKHACKATHONTEAM3Theme.typography.boldStyle
         )
     }
 }
