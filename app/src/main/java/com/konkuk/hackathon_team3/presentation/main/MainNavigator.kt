@@ -2,6 +2,34 @@ package com.konkuk.hackathon_team3.presentation.main
 
 import androidx.navigation.NavController
 
+fun NavController.navigateToOnBoardingEnterCode(){
+    navigate("EnterCode"){
+        launchSingleTop = true
+        popUpTo("onBoarding") { inclusive = true }
+    }
+}
+
+fun NavController.navigateToOnBoardingEnterNickname() {
+    navigate("EnterNickname") {
+        launchSingleTop = true
+        popUpTo("onBoarding") { inclusive = true }
+    }
+}
+
+fun NavController.navigateToOnBoardingEnterProfile() {
+    navigate("EnterProfile") {
+        launchSingleTop = true
+        popUpTo("onBoarding") { inclusive = true }
+    }
+}
+
+fun NavController.navigateToHome() {
+    navigate("main") {
+        launchSingleTop = true
+        popUpTo("main") { inclusive = true }
+    }
+}
+
 fun NavController.navigateToRanking() {
     navigate("Ranking") {
         launchSingleTop = true

@@ -6,12 +6,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.konkuk.hackathon_team3.presentation.minseo.addfamily.AddFamilyRoute
 import com.konkuk.hackathon_team3.presentation.minseo.alarm.AlarmRoute
 import com.konkuk.hackathon_team3.presentation.minseo.calendar.GasCalendarRoute
+import com.konkuk.hackathon_team3.presentation.minseo.onboarding.OnBoardingEnterCodeRoute
+import com.konkuk.hackathon_team3.presentation.minseo.onboarding.OnBoardingEnterNickNameRoute
+import com.konkuk.hackathon_team3.presentation.minseo.onboarding.OnBoardingProfileRoute
+import com.konkuk.hackathon_team3.presentation.minseo.onboarding.OnBoardingViewModel
+import com.konkuk.hackathon_team3.presentation.minseo.onboarding.StartRoute
 import com.konkuk.hackathon_team3.presentation.minseo.ranking.RankingRoute
 import com.konkuk.hackathon_team3.presentation.minseok.GasWritingRoute
 
@@ -25,10 +31,40 @@ fun MainNavHost(
             .fillMaxSize()
             .background(color = Color.White)
     ) {
+        val onBoardingViewModel: OnBoardingViewModel = viewModel()
+
         NavHost(
             navController = navController,
-            startDestination = "main"
+            startDestination = "start"
         ) {
+
+            composable(route = "start") {
+                StartRoute(
+                    navigateToOnBoardingEnterCode = { navController.navigateToOnBoardingEnterCode() },
+                    navigateToOnBoardingEnterNickName = { navController.navigateToOnBoardingEnterNickname() }
+                )
+            }
+
+            composable(route = "EnterCode") {
+                OnBoardingEnterCodeRoute(
+                    navigateToOnBoardingEnterNickname = { navController.navigateToOnBoardingEnterNickname() },
+                    viewModel = onBoardingViewModel
+                )
+            }
+
+            composable(route = "EnterNickname") {
+                OnBoardingEnterNickNameRoute(
+                    navigateToOnBoardingEnterProfile = { navController.navigateToOnBoardingEnterProfile() },
+                    viewModel = onBoardingViewModel
+                )
+            }
+
+            composable(route = "EnterProfile") {
+                OnBoardingProfileRoute(
+                    navigateToHome = { navController.navigateToHome() },
+                    viewModel = onBoardingViewModel
+                )
+            }
 
             composable(route = "main") {
                 MainRoute(
