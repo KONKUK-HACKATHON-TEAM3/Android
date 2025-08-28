@@ -18,7 +18,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -27,6 +26,8 @@ import com.konkuk.hackathon_team3.presentation.util.AppGradients
 import com.konkuk.hackathon_team3.presentation.util.noRippleClickable
 import com.konkuk.hackathon_team3.presentation.util.roundedBackgroundWithPadding
 import com.konkuk.hackathon_team3.ui.theme.KONKUKHACKATHONTEAM3Theme
+import com.konkuk.hackathon_team3.ui.theme.boldStyle
+import com.konkuk.hackathon_team3.ui.theme.regularStyle
 
 @Composable
 fun StartRoute(
@@ -81,7 +82,7 @@ fun StartScreen(
                     text = "입장하기",
                     color = Color.White,
                     fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold
+                    style = KONKUKHACKATHONTEAM3Theme.typography.boldStyle
                 )
             }
             Spacer(Modifier.height(20.dp))
@@ -100,7 +101,7 @@ fun StartScreen(
                     text = "처음이라면",
                     color = Color(0xFF8D8D8D),
                     fontSize = 14.sp,
-                    fontWeight = FontWeight.Normal,
+                    style = KONKUKHACKATHONTEAM3Theme.typography.regularStyle,
                     modifier = Modifier.padding(horizontal = 30.dp)
                 )
 
@@ -129,7 +130,7 @@ fun StartScreen(
                     text = "새로 만들기",
                     color = Color.Black,
                     fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold
+                    style = KONKUKHACKATHONTEAM3Theme.typography.boldStyle
                 )
             }
         }

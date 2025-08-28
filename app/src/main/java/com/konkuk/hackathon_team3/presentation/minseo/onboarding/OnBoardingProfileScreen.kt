@@ -35,7 +35,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -46,6 +45,7 @@ import com.konkuk.hackathon_team3.presentation.util.gradientBorder
 import com.konkuk.hackathon_team3.presentation.util.noRippleClickable
 import com.konkuk.hackathon_team3.presentation.util.roundedBackgroundWithPadding
 import com.konkuk.hackathon_team3.ui.theme.KONKUKHACKATHONTEAM3Theme
+import com.konkuk.hackathon_team3.ui.theme.boldStyle
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -98,7 +98,7 @@ fun OnBoardingProfileScreen(
             Text(
                 text = pageType.title,
                 fontSize = 20.sp,
-                fontWeight = FontWeight.SemiBold,
+                style = KONKUKHACKATHONTEAM3Theme.typography.boldStyle,
                 modifier = Modifier.padding(start = 32.dp)
             )
             Spacer(Modifier.height(16.dp))
@@ -198,7 +198,7 @@ fun OnBoardingProfileScreen(
                 text = pageType.buttonText,
                 color = Color.White,
                 fontSize = 20.sp,
-                fontWeight = FontWeight.Bold
+                style = KONKUKHACKATHONTEAM3Theme.typography.boldStyle
             )
         }
     }
