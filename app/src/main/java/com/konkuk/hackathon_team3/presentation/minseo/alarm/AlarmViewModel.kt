@@ -10,8 +10,12 @@ import java.time.LocalTime
 data class AlarmUiState(
     val alarmList: List<AlarmData> = listOf(
         AlarmData(
-            message = "아빠님이 새로운 스토리를 공유했어요.",
-            time = LocalTime.parse("17:00:20")
+            message = "오늘의 스토리를 아직 작성하지 않으셨네요. 작성하러 가볼까요?",
+            time = LocalTime.now()
+        ),
+        AlarmData(
+            message = "유정님이 새로운 스토리를 공유했어요.",
+            time = LocalTime.parse("08:30:20")
         ),
         AlarmData(
             message = "이번 주 순위가 바뀌었어요. 지금 바로 확인해보세요.",
