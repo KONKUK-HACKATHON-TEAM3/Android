@@ -26,6 +26,7 @@ fun MainRoute(
     navigateToGasWriting: () -> Unit,
     navigateToAddFamily: () -> Unit,
     navigateToCalendar: () -> Unit,
+    navigateToAlarm: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     MainScreen(
@@ -33,6 +34,7 @@ fun MainRoute(
         navigateToRecordWrite = navigateToGasWriting,
         navigateToCalendar = navigateToCalendar,
         navigateToAddFamily = navigateToAddFamily,
+        navigateToAlarm = navigateToAlarm,
         modifier = modifier
     )
 }
@@ -43,6 +45,7 @@ fun MainScreen(
     navigateToRecordWrite: () -> Unit,
     navigateToCalendar: () -> Unit,
     navigateToAddFamily: () -> Unit,
+    navigateToAlarm: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     var showDetailGas by remember { mutableStateOf(false) }
@@ -88,6 +91,13 @@ fun MainScreen(
             ) {
                 Text("to Add Family")
             }
+            Spacer(modifier = Modifier.height(20.dp))
+            Button(
+                onClick = navigateToAlarm,
+                modifier = modifier
+            ) {
+                Text("to Alarm")
+            }
         }
 
         DetailGasAnimationCard(
@@ -105,7 +115,8 @@ private fun PreviewMainScreen() {
             navigateToRanking = {},
             navigateToRecordWrite = {},
             navigateToCalendar = {},
-            navigateToAddFamily = {}
+            navigateToAddFamily = {},
+            navigateToAlarm = {}
         )
     }
 }

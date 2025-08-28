@@ -29,3 +29,10 @@ fun NavController.navigateToCalendar() {
         popUpTo("calendar") { inclusive = true }
     }
 }
+
+fun NavController.navigateToAlarm() {
+    navigate("alarm") {
+        launchSingleTop = true
+        popUpTo("alarm") { inclusive = true }
+    }
+}
