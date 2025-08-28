@@ -101,7 +101,7 @@ fun HomerScreen(
             Column(modifier = Modifier.fillMaxSize()) {
                 Row(modifier = Modifier.padding(top = 86.dp)) {
                     Spacer(modifier = Modifier.weight(1f))
-                    Icon(
+                    Icon(modifier = Modifier .blur(radius = 2.dp),
                         imageVector = ImageVector.vectorResource(R.drawable.ic_super_big_gas),
                         contentDescription = null,
                         tint = Color.Unspecified

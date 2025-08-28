@@ -129,6 +129,7 @@ fun CardBack(
                 cornerRadius = 10.dp
             )
     ) {
+        Spacer(modifier = Modifier.height(10.dp))
         GasTopbar(backButtonClicked = onCancel)
         Spacer(modifier = Modifier.height(11.dp))
         LazyColumn(
