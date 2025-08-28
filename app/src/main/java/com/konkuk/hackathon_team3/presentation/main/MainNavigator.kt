@@ -15,3 +15,24 @@ fun NavController.navigateToGasWriting() {
         popUpTo("gasWriting") { inclusive = true }
     }
 }
+
+fun NavController.navigateToAddFamily() {
+    navigate("addFamily") {
+        launchSingleTop = true
+        popUpTo("addFamily") { inclusive = true }
+    }
+}
+
+fun NavController.navigateToCalendar() {
+    navigate("calendar") {
+        launchSingleTop = true
+        popUpTo("calendar") { inclusive = true }
+    }
+}
+
+fun NavController.navigateToAlarm() {
+    navigate("alarm") {
+        launchSingleTop = true
+        popUpTo("alarm") { inclusive = true }
+    }
+}
