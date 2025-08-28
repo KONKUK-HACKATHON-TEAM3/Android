@@ -84,7 +84,7 @@ fun MainNavHost(
 
             composable(route = "gasWriting") {
                 GasWritingRoute(
-                    navigateToRanking = { navController.navigateToRanking() }
+                    navigateToHome = { navController.navigateToHome() }
                 )
             }
 

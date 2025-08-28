@@ -38,4 +38,6 @@ object ServicePool {
     val homeService = ApiFactory.create<HomeService>()
 
     val rankingService = ApiFactory.create<RankingService>()
+
+    val uploadService = ApiFactory.create<UploadService>()
 }
