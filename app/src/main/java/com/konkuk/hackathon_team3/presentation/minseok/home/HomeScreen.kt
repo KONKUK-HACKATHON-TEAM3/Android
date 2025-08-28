@@ -72,6 +72,7 @@ fun HomerScreen(
         item {
             GasTopbar(
                 isHomeScreen = true,
+                navigateToNotification = navigateToAlarm
             )
         }
 

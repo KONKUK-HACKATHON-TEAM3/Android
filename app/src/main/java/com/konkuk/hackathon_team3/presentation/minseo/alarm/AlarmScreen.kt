@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.konkuk.hackathon_team3.presentation.main.GasTopbar
+import com.konkuk.hackathon_team3.presentation.util.gasComponentDesign
 import com.konkuk.hackathon_team3.ui.theme.KONKUKHACKATHONTEAM3Theme
 import com.konkuk.hackathon_team3.ui.theme.boldStyle
 import com.konkuk.hackathon_team3.ui.theme.regularStyle
@@ -65,10 +66,8 @@ fun AlarmScreen(
         )
 
         LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            contentPadding = PaddingValues(vertical = 12.dp)
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             items(
                 items = uiState.alarmList,
@@ -76,6 +75,7 @@ fun AlarmScreen(
             ) { alarm ->
                 Row(
                     modifier = Modifier
+                        .gasComponentDesign()
                         .fillMaxWidth()
                         .padding(21.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
