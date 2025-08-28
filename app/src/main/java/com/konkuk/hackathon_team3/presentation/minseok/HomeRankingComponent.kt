@@ -45,10 +45,12 @@ fun HomeRankingComponent(
 ) {
     var currentIndex by remember { mutableIntStateOf(0) }
 
-    LaunchedEffect(Unit) {
-        while (true) {
-            delay(2000L)
-            currentIndex = (currentIndex + 1) % rankings.size.coerceAtLeast(1)
+    LaunchedEffect(rankings) {
+        if (rankings.isNotEmpty()) {
+            while (true) {
+                delay(2000L)
+                currentIndex = (currentIndex + 1) % rankings.size
+            }
         }
     }
 

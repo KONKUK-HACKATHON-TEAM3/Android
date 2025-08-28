@@ -34,4 +34,7 @@ object ApiFactory {
 
 object ServicePool {
     val exampleService = ApiFactory.create<ExampleService>()
+
+    val homeService = ApiFactory.create<HomeService>()
+
 }
