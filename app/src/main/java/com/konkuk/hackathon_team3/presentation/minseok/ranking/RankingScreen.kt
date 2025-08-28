@@ -29,7 +29,7 @@ import com.konkuk.hackathon_team3.ui.theme.KONKUKHACKATHONTEAM3Theme
 
 @Composable
 fun RankingRoute(
-    navigateToRecordWrite: () -> Unit,
+    popBackStack: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: RankingViewModel = viewModel()
 
@@ -37,6 +37,7 @@ fun RankingRoute(
     val uiState by viewModel.uiState.collectAsState()
 
     RankingScreen(
+        popBackStack=popBackStack,
         uiState = uiState,
         modifier = modifier
     )
@@ -44,12 +45,13 @@ fun RankingRoute(
 
 @Composable
 fun RankingScreen(
+    popBackStack: () -> Unit,
     modifier: Modifier = Modifier,
     uiState: RankingUiState = RankingUiState()
 ) {
     Column(modifier = modifier) {
         GasTopbar(
-            backButtonClicked = {}
+            backButtonClicked = popBackStack
         )
         Spacer(modifier = Modifier.height(11.dp))
         Column(
@@ -101,6 +103,8 @@ fun RankingScreen(
 @Composable
 private fun PreviewRankingScreen() {
     KONKUKHACKATHONTEAM3Theme {
-        RankingScreen()
+        RankingScreen(
+            popBackStack = {}
+        )
     }
 }

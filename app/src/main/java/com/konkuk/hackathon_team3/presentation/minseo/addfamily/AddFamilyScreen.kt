@@ -29,15 +29,18 @@ import com.konkuk.hackathon_team3.ui.theme.boldStyle
 
 @Composable
 fun AddFamilyRoute(
+    popBackStack:()->Unit,
     modifier: Modifier = Modifier
 ) {
     AddFamilyScreen(
+        popBackStack=popBackStack,
         modifier = modifier
     )
 }
 
 @Composable
 fun AddFamilyScreen(
+    popBackStack:()->Unit,
     modifier: Modifier = Modifier
 ) {
     val inviteCode = "QRSFDFESVS"
@@ -47,7 +50,7 @@ fun AddFamilyScreen(
         modifier = modifier.fillMaxWidth()
     ) {
         GasTopbar(
-            backButtonClicked = {},
+            backButtonClicked = popBackStack,
             modifier = Modifier.padding(vertical = 10.dp)
         )
 
@@ -95,6 +98,8 @@ fun AddFamilyScreen(
 @Composable
 private fun PreviewAddFamilyScreen() {
     KONKUKHACKATHONTEAM3Theme {
-        AddFamilyScreen()
+        AddFamilyScreen(
+            popBackStack = {},
+        )
     }
 }

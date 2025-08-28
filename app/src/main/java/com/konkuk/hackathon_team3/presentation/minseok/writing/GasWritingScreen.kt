@@ -79,6 +79,7 @@ import java.io.FileOutputStream
 
 @Composable
 fun GasWritingRoute(
+    popBackStack:()->Unit,
     navigateToHome: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: GasWritingViewModel = viewModel()
@@ -148,6 +149,7 @@ fun GasWritingRoute(
     }
 
     GasWritingScreen(
+        popBackStack=popBackStack,
         uiState = uiState,
         onImageClick = {
             if (uiState.hasCameraPermission) {
@@ -234,6 +236,7 @@ fun Bitmap.rotate(degrees: Float): Bitmap {
 
 @Composable
 fun GasWritingScreen(
+    popBackStack:()->Unit,
     uiState: GasWritingUiState,
     onImageClick: () -> Unit,
     onRecordingToggle: () -> Unit,
@@ -251,7 +254,7 @@ fun GasWritingScreen(
             modifier = Modifier.fillMaxSize()
         ) {
             GasTopbar(
-                backButtonClicked = {}
+                backButtonClicked = popBackStack
             )
 
             Box(
@@ -490,7 +493,8 @@ private fun PreviewGasWritingScreen() {
             onRecordingToggle = {},
             onTextChange = {},
             onClearError = {},
-            onUploadButtonClicked = {}
+            onUploadButtonClicked = {},
+            popBackStack={}
         )
     }
 }
