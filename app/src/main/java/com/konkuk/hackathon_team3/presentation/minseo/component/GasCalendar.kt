@@ -212,6 +212,7 @@ fun GasHomeCalendar(
     Column(
         modifier = modifier
             .gasComponentDesign()
+            .padding(horizontal = 30.dp)
             .padding(top = 20.dp, bottom = 14.dp)
             .noRippleClickable(navigateToCalendar),
         horizontalAlignment = Alignment.CenterHorizontally

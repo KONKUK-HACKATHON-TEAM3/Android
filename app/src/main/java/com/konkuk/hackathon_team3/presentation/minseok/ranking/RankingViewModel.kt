@@ -49,7 +49,7 @@ class RankingViewModel : ViewModel() {
         loadRanking()
     }
 
-    fun loadRanking(memberId: Long = 1) {
+    fun loadRanking(memberId: Long = 2) {
         viewModelScope.launch {
 
             try {
