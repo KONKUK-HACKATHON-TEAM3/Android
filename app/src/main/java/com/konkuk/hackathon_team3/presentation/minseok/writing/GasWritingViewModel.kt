@@ -111,7 +111,7 @@ class GasWritingViewModel : ViewModel() {
         _uiState.value = _uiState.value.copy(textContent = text)
     }
 
-  
+
     // 🎯 실시간 STT 토글
     @RequiresPermission(Manifest.permission.RECORD_AUDIO)
     fun toggleRecording(context: Context) {
