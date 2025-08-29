@@ -88,18 +88,18 @@ fun LikeHeart(
                 onToggle(false)
             }
         },
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.Bottom
     ) {
         Text(text = displayCount.toString(), style = KONKUKHACKATHONTEAM3Theme.typography.boldStyle)
         Box(
-            modifier = Modifier.size(40.dp),
+            modifier = Modifier.size(30.dp),
             contentAlignment = Alignment.Center
         ) {
             if (isAnimating) {
                 LottieAnimation(
                     composition = composition,
                     progress = { progress },
-                    modifier = Modifier.size(35.dp).padding(bottom = 5.dp)
+                    modifier = Modifier.size(30.dp)
                 )
             } else {
                 Icon(
@@ -124,18 +124,16 @@ fun CardBack(
 ) {
     Column(
         modifier = modifier
-            .roundedBackgroundWithPadding(
-                backgroundColor = Color.White,
-                cornerRadius = 10.dp
-            )
+            .gasComponentDesign()
+            .padding(horizontal = 11.dp),
     ) {
         Spacer(modifier = Modifier.height(10.dp))
         GasTopbar(backButtonClicked = onCancel)
         Spacer(modifier = Modifier.height(11.dp))
         LazyColumn(
             modifier = Modifier
-                .gasComponentDesign()
-                .padding(horizontal = 11.dp),
+//                .gasComponentDesign()
+//                .padding(horizontal = 11.dp),
         ) {
             itemsIndexed(uiState.feedList) { index, feed ->
                 Row(verticalAlignment = Alignment.CenterVertically) {
