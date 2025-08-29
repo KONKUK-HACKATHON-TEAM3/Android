@@ -161,21 +161,15 @@ fun GasCalendar(
                             modifier = Modifier
                                 .size(36.dp)
                                 .clip(CircleShape)
-                                .background(if (isSelected) Color(0xFFFF8514) else Color.Transparent)
+                                .background(
+                                    if (isSelected) Color(0xFFFF8514) else if (isMarked) Color.White.copy(
+                                        alpha = 0.5f
+                                    ) else Color.Transparent
+                                )
                                 .noRippleClickable {
                                     onDateClicked(date)
                                 }
                         ) {
-
-                            if (isMarked && !isSelected) {
-                                Box(
-                                    modifier = Modifier
-                                        .align(Alignment.BottomCenter)
-                                        .size(8.dp)
-                                        .clip(CircleShape)
-                                        .background(Color.White)
-                                )
-                            }
 
                             Text(
                                 text = date.dayOfMonth.toString(),
@@ -186,7 +180,7 @@ fun GasCalendar(
                                     else -> Color.Black
                                 },
                                 fontSize = 13.sp,
-                                style = if (isSelected) KONKUKHACKATHONTEAM3Theme.typography.boldStyle else KONKUKHACKATHONTEAM3Theme.typography.regularStyle
+                                style = KONKUKHACKATHONTEAM3Theme.typography.boldStyle
                             )
                         }
                     }
