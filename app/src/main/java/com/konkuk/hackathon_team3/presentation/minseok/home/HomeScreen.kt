@@ -169,7 +169,7 @@ fun HomerScreen(
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = "최근 업데이트: 2시간 전",
+                            text = "최근 업데이트 2시간 전",
                             fontSize = 9.sp,
                             style = KONKUKHACKATHONTEAM3Theme.typography.regularStyle,
                         )

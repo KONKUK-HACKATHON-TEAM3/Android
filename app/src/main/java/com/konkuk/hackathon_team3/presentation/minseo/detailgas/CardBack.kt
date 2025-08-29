@@ -90,7 +90,7 @@ fun LikeHeart(
         },
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = displayCount.toString())
+        Text(text = displayCount.toString(), style = KONKUKHACKATHONTEAM3Theme.typography.boldStyle)
         Box(
             modifier = Modifier.size(40.dp),
             contentAlignment = Alignment.Center
@@ -108,7 +108,7 @@ fun LikeHeart(
                     ),
                     contentDescription = null,
                     tint = Color.Unspecified,
-                    modifier = Modifier.align(Alignment.Center)
+                    modifier = Modifier.align(Alignment.Center).size(30.dp)
                 )
             }
         }

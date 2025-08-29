@@ -59,9 +59,9 @@ fun HomeAddFamilyComponent(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ){
                         Text(
-                            color = if (it.nickname == "나") Color(0xFFFF8514) else Color.Black,
+                            color = if (it.nickname == "나") Color.White else Color.Black,
                             text = it.nickname,
-                            style = KONKUKHACKATHONTEAM3Theme.typography.regularStyle,
+                            style = if (it.nickname == "나") KONKUKHACKATHONTEAM3Theme.typography.boldStyle else KONKUKHACKATHONTEAM3Theme.typography.regularStyle,
                             fontSize = 9.sp
                         )
                         Spacer(modifier = Modifier.height(4.dp))
