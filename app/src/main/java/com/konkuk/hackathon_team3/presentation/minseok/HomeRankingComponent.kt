@@ -103,7 +103,7 @@ fun RankingItem(modifier: Modifier = Modifier, rankingData: RankingData) {
         Text(
             modifier = Modifier.padding(top = 2.dp),
             text = "${rankingData.rank}위 ${rankingData.nickname}",
-            color = Color.Black,
+            color = if (rankingData.nickname == "나") Color(0xFFFF8514) else Color.Black,
             fontSize = 12.sp,
             style = KONKUKHACKATHONTEAM3Theme.typography.boldStyle
         )

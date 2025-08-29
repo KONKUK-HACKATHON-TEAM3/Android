@@ -90,6 +90,8 @@ fun RankingScreen(
             Text(text = "이번주 순위",
                 fontSize = 14.sp,
                 style = KONKUKHACKATHONTEAM3Theme.typography.boldStyle)
+            Spacer(modifier = Modifier.height(4.dp))
+
             Text(text = "2025.08.25 ~ 2025.08.31",
                 fontSize = 9.sp,
                 style = KONKUKHACKATHONTEAM3Theme.typography.regularStyle)
