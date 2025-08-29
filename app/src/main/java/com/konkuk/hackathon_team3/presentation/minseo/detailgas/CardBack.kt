@@ -104,7 +104,7 @@ fun LikeHeart(
             } else {
                 Icon(
                     imageVector = ImageVector.vectorResource(
-                        if (liked) R.drawable.ic_like_true else R.drawable.ic_list_false
+                        if (liked) R.drawable.ic_like_true else R.drawable.ic_like_false
                     ),
                     contentDescription = null,
                     tint = Color.Unspecified,
